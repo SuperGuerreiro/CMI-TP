@@ -1,33 +1,50 @@
 #include "ofApp.h"
 
+#include "ScreenElements/Image.hpp"
+#include "ScreenElements/Video.hpp"
+#include "ScreenElements/Triangle.hpp"
+
+#define DIRECTORY "gallery/"
+#define ELEMENT_WIDTH 300
+#define ELEMENT_HEIGHT 300
+
 //--------------------------------------------------------------
 void ofApp::setup(){
 
 	isFullScreen = false;
 
-	dir.listDir("images/of_logos/");
+	dir.listDir(DIRECTORY);
 	dir.allowExt("jpg");
+	dir.allowExt("png");
+	dir.allowExt("gif");
 	dir.allowExt("mov");
 
-	dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
+	dir.sort();
 
-	//allocate the vector to have as many ofImages as files
-	if( dir.size() ){
-		images.assign(dir.size(), ofImage());
-	}
+	int x = 50;
+	int y = 50;
 
-	// you can now iterate through the files and load them into the ofImage vector
-	for(int i = 0; i < (int)dir.size(); i++){
-		images[i].load(dir.getPath(i));
-
-// Uncomment this to show movies with alpha channels
- //fingerMovie.setPixelFormat(OF_PIXELS_RGBA);
-
-		fingerMovie.load("images/of_logos/fingers.mov");
-		fingerMovie.setLoopState(OF_LOOP_NORMAL);
-		fingerMovie.play();
-		isPaused = true;
-		fingerMovie.setPaused(isPaused);
+	for(int i = 0; i < dir.size(); i++){
+		string e = dir.getPath(i);
+		boost::filesystem::path p(e);
+		if (p.has_extension())
+		{
+			string ext = p.extension().string();
+			if (ext == ".jpg" || ext == ".png" || ext == ".gif")
+			{
+				elements.push_back(new Image(e.c_str(), x, y, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+			}
+			else if (ext == ".mov")
+			{
+				elements.push_back(new Video(e.c_str(), x, y, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+			}
+			x += 50 + ELEMENT_WIDTH;
+			if (x > 1300)
+			{
+				x = 50;
+				y += 50 + ELEMENT_HEIGHT;
+			}
+		}
 	}
 	currentImage = 0;
 
@@ -38,84 +55,23 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	fingerMovie.update();
+	for each (ScreenElement* e in elements)
+	{
+		e->update();
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+	//if (!elements.empty())
+	//{
+	//	elements[currentImage]->draw();
+	//}
 
-	if (dir.size() > 0) {
-		ofSetColor(ofColor::white);
-		if (currentImage < (int)dir.size() - 1); {
-			images[currentImage].draw(300, 50);
-			if ((currentImage + 5) < (int)dir.size()) {
-				images[currentImage + 1].draw(610, 50);
-				images[currentImage + 2].draw(920, 50);
-				images[currentImage + 3].draw(300, 310);
-				images[currentImage + 4].draw(610, 310);
-				images[currentImage + 5].draw(920, 310);
-			}
-		}
-
-		if (currentImage == (int)dir.size() - 1) {
-			//VIDEO STUFF HERE
-
-			ofSetHexColor(0xFFFFFF);
-			ofPixels & pixels = fingerMovie.getPixels();
-
-			int vidWidth = pixels.getWidth();
-			int vidHeight = pixels.getHeight();
-			int nChannels = pixels.getNumChannels();
-
-			if (!isFullScreen)
-				fingerMovie.draw(300, 50, 100, 100);
-			else
-				fingerMovie.draw(300, 50, vidWidth, vidHeight);
-			
-			ofSetHexColor(0x000000);
-
-
-			if (fingerMovie.getIsMovieDone()) {
-				ofSetHexColor(0xFF0000);
-				ofDrawBitmapString("end of movie", 20, 440);
-			}
-		}
-
-		//ofSetColor(ofColor::gray);
-		//string pathInfo = dir.getName(currentImage) + " " + dir.getPath(currentImage) + "\n\n" +
-		//	"press any key to advance current image\n\n" +
-		//	"many thanks to hikaru furuhashi for the OFs";
-		//ofDrawBitmapString(pathInfo, 300, images[currentImage].getHeight() + 80);
+	for each (ScreenElement* e in elements)
+	{
+		e->draw();
 	}
-
-	ofSetColor(ofColor::gray);
-	for (int i = 0; i < (int)dir.size(); i++) {
-		if (i == currentImage) {
-			ofSetColor(ofColor::red);
-		}
-		else {
-			ofSetColor(ofColor::black);
-		}
-
-		string fileInfo = "file " + ofToString(i + 1) + " = " + dir.getName(i);
-		ofDrawBitmapString(fileInfo, 50, i * 20 + 50);
-		
-		
-	}
-
-	/*
-	currImg = images[currentImage];
-
-	if (!isFullScreen) {
-		currImg.draw(300, 50, currImg.getWidth(), currImg.getHeight());
-	}
-
-	if (isFullScreen) {
-		currImg.draw(300, 50);
-	}
-	
-	*/
-	
 }
 
 //--------------------------------------------------------------

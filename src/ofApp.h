@@ -1,8 +1,7 @@
-/* Refer to the README.md in the example's root folder for more information on usage */
-
 #pragma once
 
 #include "ofMain.h"
+#include "ScreenElements/ScreenElement.hpp"
 
 class ofApp : public ofBaseApp{
 	
@@ -35,5 +34,6 @@ class ofApp : public ofBaseApp{
 		bool                isPaused;
 		bool				isFullScreen;
 		
+		vector<ScreenElement*> elements;
 };
 
