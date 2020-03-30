@@ -1,7 +1,7 @@
 #include "Image.hpp"
 
-Image::Image(const char* path, int xOffset, int yOffset, int width, int height)
-	: xOffset(xOffset), yOffset(yOffset), width(width), height(height)
+Image::Image(const char* path, std::string name, int xOffset, int yOffset, int width, int height)
+	: name(name), xOffset(xOffset), yOffset(yOffset), width(width), height(height)
 {
 	self = ofImage();
 	self.load(path);

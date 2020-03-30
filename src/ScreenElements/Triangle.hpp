@@ -14,6 +14,7 @@ public:
 	void setOffset(int xOffset, int yOffset) override;
 	void setSize(int width, int height) override;
 	void setFillMode(bool fill) override;
+	ElementType getType() override { return ElementType::Triangle; };
 
 	void setRotation(float rotation);
 

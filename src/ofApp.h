@@ -22,6 +22,7 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);		
+		void mouseScrolled(int x, int y, float scrollX, float scrollY);
 		
 		// we will have a dynamic number of images, based on the content of a directory:
 		ofDirectory dir;

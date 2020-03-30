@@ -32,11 +32,11 @@ void ofApp::setup(){
 			string ext = p.extension().string();
 			if (ext == ".jpg" || ext == ".png" || ext == ".gif")
 			{
-				elements.push_back(new Image(e.c_str(), x, y, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+				elements.push_back(new Image(e.c_str(), p.filename().string(), x, y, ELEMENT_WIDTH, ELEMENT_HEIGHT));
 			}
 			else if (ext == ".mov")
 			{
-				elements.push_back(new Video(e.c_str(), x, y, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+				elements.push_back(new Video(e.c_str(), p.filename().string(), x, y, ELEMENT_WIDTH, ELEMENT_HEIGHT));
 			}
 			x += 50 + ELEMENT_WIDTH;
 			if (x > 1300)
@@ -63,11 +63,6 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	//if (!elements.empty())
-	//{
-	//	elements[currentImage]->draw();
-	//}
-
 	for each (ScreenElement* e in elements)
 	{
 		e->draw();
@@ -151,6 +146,11 @@ void ofApp::windowResized(int w, int h){
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseScrolled(int x, int y, float scrollX, float scrollY){
 
 }
 
