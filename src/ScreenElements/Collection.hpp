@@ -6,7 +6,7 @@ class Collection : public ScreenElement
 {
 public:
 	Collection();
-	Collection(int xOffset, int yOffset, int width, int height);
+	Collection(int xOffset, int yOffset, int width, int height, int elementWidth, int elementHeight, int padding);
 	~Collection();
 
 	void update() override;
@@ -18,6 +18,8 @@ public:
 	ElementType getType() override { return ElementType::Collection; };
 
 	void add(ScreenElement* e);
+	void setElementsSize(int width, int height);
+	void scroll(float value);
 
 private:
 	int xOffset;
@@ -29,5 +31,13 @@ private:
 	int padding;
 	int selected;
 
+	int perRow;
+	float scrollVal;
+	float scrollMult;
+	int scrollOffset;
+	int spacing;
+
 	std::vector<ScreenElement*> elements;
+
+	void resetAttributes();
 };

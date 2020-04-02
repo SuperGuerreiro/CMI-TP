@@ -12,6 +12,7 @@
 void ofApp::setup(){
 
 	isFullScreen = false;
+	elements.setElementsSize(ELEMENT_WIDTH, ELEMENT_HEIGHT);
 
 	dir.listDir(DIRECTORY);
 	dir.allowExt("jpg");
@@ -20,10 +21,10 @@ void ofApp::setup(){
 	dir.allowExt("mov");
 
 	dir.sort();
-
+	/*
 	int x = 50;
 	int y = 50;
-
+	*/
 	for(int i = 0; i < dir.size(); i++){
 		string e = dir.getPath(i);
 		boost::filesystem::path p(e);
@@ -32,18 +33,20 @@ void ofApp::setup(){
 			string ext = p.extension().string();
 			if (ext == ".jpg" || ext == ".png" || ext == ".gif")
 			{
-				elements.push_back(new Image(e.c_str(), p.filename().string(), x, y, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+				elements.add(new Image(e.c_str(), p.filename().string(), 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT));
 			}
 			else if (ext == ".mov")
 			{
-				elements.push_back(new Video(e.c_str(), p.filename().string(), x, y, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+				elements.add(new Video(e.c_str(), p.filename().string(), 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT));
 			}
+			/*
 			x += 50 + ELEMENT_WIDTH;
 			if (x > 1300)
 			{
 				x = 50;
 				y += 50 + ELEMENT_HEIGHT;
 			}
+			*/
 		}
 	}
 	currentImage = 0;
@@ -55,18 +58,24 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	/*
 	for each (ScreenElement* e in elements)
 	{
 		e->update();
 	}
+	*/
+	elements.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+	/*
 	for each (ScreenElement* e in elements)
 	{
 		e->draw();
 	}
+	*/
+	elements.draw();
 }
 
 //--------------------------------------------------------------
@@ -141,7 +150,7 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+	elements.setSize(w, h);
 }
 
 //--------------------------------------------------------------
@@ -151,7 +160,7 @@ void ofApp::gotMessage(ofMessage msg){
 
 //--------------------------------------------------------------
 void ofApp::mouseScrolled(int x, int y, float scrollX, float scrollY){
-
+	elements.scroll(scrollY);
 }
 
 //--------------------------------------------------------------

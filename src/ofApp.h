@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ScreenElements/ScreenElement.hpp"
+#include "ScreenElements/Collection.hpp"
 
 class ofApp : public ofBaseApp{
 	
@@ -35,6 +35,8 @@ class ofApp : public ofBaseApp{
 		bool                isPaused;
 		bool				isFullScreen;
 		
-		vector<ScreenElement*> elements;
+		//vector<ScreenElement*> elements;
+		Collection elements;
+
 };
 
