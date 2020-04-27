@@ -142,12 +142,13 @@ void ofApp::keyPressed(int key) {
 			currentImage = (int)dir.size() - 1;
 
 	}
-
+	elements.onKeyPressed(key);
 	switch (key) {
 	case OF_KEY_SHIFT:
 		isPaused = !isPaused;
 		fingerMovie.setPaused(isPaused);
 		cout << "A" << endl;
+		cout << elements.getSelected() << endl;
 		break;
 
 	case OF_KEY_LEFT:
@@ -180,7 +181,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+	elements.onClick(x, y, button);
 }
 
 //--------------------------------------------------------------

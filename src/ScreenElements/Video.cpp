@@ -19,8 +19,8 @@ void Video::update()
 
 void Video::draw()
 {
-	ofSetColor(ofColor::black);							//These 2 lines draw a black rectangle behind the element for placement purposes only
-	ofDrawRectangle(xOffset, yOffset, width, height);	//TODO: remove in the final build
+	//ofSetColor(ofColor::black);							//These 2 lines draw a black rectangle behind the element for placement purposes only
+	//ofDrawRectangle(xOffset, yOffset, width, height);	//TODO: remove in the final build
 
 	ofSetColor(ofColor::white);
 	if (fillMode)
@@ -61,4 +61,9 @@ void Video::setSize(int width, int height)
 void Video::setFillMode(bool fill)
 {
 	fillMode = fill;
+}
+
+bool Video::onClick(int x, int y, int button)
+{
+	return x >= xOffset && x <= xOffset + width && y >= yOffset && y <= yOffset + height;
 }

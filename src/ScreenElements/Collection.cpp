@@ -1,5 +1,6 @@
 #include "Collection.hpp"
 
+#define SELECTED_QUAD_PADDING 4
 
 Collection::Collection()
 {
@@ -40,6 +41,14 @@ void Collection::update()
 
 void Collection::draw()
 {
+	if (selected != -1)
+	{
+		int quadXOffset, quadYOffset;
+		quadXOffset = xOffset + padding + spacing / 2 + (selected % perRow) * (padding + elementWidth + spacing) - SELECTED_QUAD_PADDING;
+		quadYOffset = yOffset + padding + (selected / perRow) * (padding + elementHeight) - scrollOffset * scrollVal - SELECTED_QUAD_PADDING;
+		ofSetColor(ofColor::blue);
+		ofDrawRectangle(quadXOffset, quadYOffset, elementWidth + SELECTED_QUAD_PADDING * 2, elementHeight + SELECTED_QUAD_PADDING * 2);
+	}
 	for each (ScreenElement* e in elements)
 	{
 		e->draw();
@@ -65,6 +74,23 @@ void Collection::setFillMode(bool fill)
 
 }
 
+bool Collection::onClick(int x, int y, int button)
+{
+	if (x >= xOffset && x <= xOffset + width && y >= yOffset && y <= yOffset + height)
+	{
+		for (int i = 0; i < elements.size(); i++)
+		{
+			if (elements[i]->onClick(x, y, button))
+			{
+				selected = i;
+				break;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
 void Collection::add(ScreenElement* e)
 {
 	int eleXOffset = xOffset + padding + spacing / 2 + ((int)elements.size() % perRow) * (padding + elementWidth + spacing);
@@ -72,6 +98,41 @@ void Collection::add(ScreenElement* e)
 	e->setOffset(eleXOffset, eleYOffset);
 	e->setSize(elementWidth, elementHeight);
 	elements.push_back(e);
+}
+
+std::string Collection::getSelected()
+{
+	if (selected == -1)
+	{
+		return "";
+	}
+	return elements[selected]->getName();
+}
+
+void Collection::unselect()
+{
+	selected = -1;
+}
+
+void Collection::onKeyPressed(int key)
+{
+	switch (key)
+	{
+	case OF_KEY_UP:
+		selected = selected - perRow < 0 ? elements.size() - 1 : selected - perRow;
+		break;
+	case OF_KEY_DOWN:
+		selected = selected + perRow < elements.size() ? selected + perRow : 0;
+		break;
+	case OF_KEY_LEFT:
+		selected = selected - 1 < 0 ? elements.size() - 1 : selected - 1;
+		break;
+	case OF_KEY_RIGHT:
+		selected = selected + 1 < elements.size() ? selected + 1 : 0;
+		break;
+	default:
+		break;
+	}
 }
 
 void Collection::setElementsSize(int width, int height)

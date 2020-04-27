@@ -15,9 +15,16 @@ public:
 	void setOffset(int xOffset, int yOffset) override;
 	void setSize(int width, int height) override;
 	void setFillMode(bool fill) override;
-	ElementType getType() override { return ElementType::Collection; };
+
+	bool onClick(int x, int y, int button) override;
+
+	const inline ElementType getType() const override { return ElementType::Collection; };
+	const inline std::string getName() const override { return ""; };
 
 	void add(ScreenElement* e);
+	std::string getSelected();
+	void unselect();
+	void onKeyPressed(int key);
 	void setElementsSize(int width, int height);
 	void scroll(float value);
 
