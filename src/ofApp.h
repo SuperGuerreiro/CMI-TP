@@ -2,6 +2,8 @@
 
 #include "ofMain.h"
 #include "ScreenElements/Collection.hpp"
+#include "ofxXmlSettings.h"
+
 
 class ofApp : public ofBaseApp{
 	
@@ -28,6 +30,9 @@ class ofApp : public ofBaseApp{
 		ofDirectory dir;
 		vector<ofImage> images;
 		
+		ofxXmlSettings XML;
+		ofColor a;
+
 		ofImage currImg;
 		int currentImage;
 

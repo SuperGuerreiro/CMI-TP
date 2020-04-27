@@ -39,6 +39,52 @@ void ofApp::setup(){
 			{
 				elements.add(new Video(e.c_str(), p.filename().string(), 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT));
 			}
+
+
+			if (XML.loadFile(p.filename().string() + ".xml")) {
+				printf("%s_settings.xml loaded \n", p.filename().string());
+			}
+			else {
+				currImg.load(e.c_str());
+				XML.setValue("settings:name", p.filename().string());
+				XML.setValue("settings:width", currImg.getWidth());
+				XML.setValue("settings:height", currImg.getHeight());
+
+				float lightness = 0;
+				float brightness = 0;
+				float hue = 0;
+
+				for (int j = 0; j < currImg.getWidth(); j++) {
+					
+					for (int k = 0; k < currImg.getHeight(); k++) {
+						ofColor currPixel = currImg.getColor(j, k);
+
+						lightness += currPixel.getLightness();
+						brightness += currPixel.getBrightness();
+						hue += currPixel.getHue();
+					}
+				}
+
+				int imgSize = currImg.getWidth() * currImg.getHeight();
+				lightness = lightness / imgSize;
+				brightness = brightness / imgSize;
+				hue = hue / imgSize;
+				
+				XML.setValue("settings:lightness", lightness);
+				XML.setValue("settings:brightness", brightness);
+				XML.setValue("settings:hue", hue);
+
+				//Tags
+				XML.addTag("Tags");
+				
+				XML.pushTag("Tags", 0);
+				XML.addValue("rabo", "rabo");
+				XML.addValue("aaa", "as");
+
+
+				XML.saveFile(p.filename().string() + ".xml");
+			}
+
 			/*
 			x += 50 + ELEMENT_WIDTH;
 			if (x > 1300)
@@ -107,6 +153,10 @@ void ofApp::keyPressed(int key) {
 	case OF_KEY_LEFT:
 		isFullScreen = !isFullScreen;
 		cout << isFullScreen << endl;
+		break;
+
+	case OF_KEY_RIGHT:
+
 		break;
 
 
