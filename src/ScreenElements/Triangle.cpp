@@ -38,3 +38,8 @@ void Triangle::setSize(int width, int height)
 void Triangle::setFillMode(bool fill)
 {
 }
+
+bool Triangle::onClick(int x, int y, int button)
+{
+	return false;
+}

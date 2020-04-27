@@ -14,7 +14,11 @@ public:
 	void setOffset(int xOffset, int yOffset) override;
 	void setSize(int width, int height) override;
 	void setFillMode(bool fill) override;
-	ElementType getType() override { return ElementType::Triangle; };
+
+	bool onClick(int x, int y, int button) override;
+
+	const inline ElementType getType() const override { return ElementType::Triangle; };
+	const inline std::string getName() const override { return ""; };
 
 	void setRotation(float rotation);
 

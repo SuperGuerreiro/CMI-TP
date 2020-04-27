@@ -15,8 +15,8 @@ void Image::update()
 
 void Image::draw()
 {
-	ofSetColor(ofColor::black);							//These 2 lines draw a black rectangle behind the element for placement purposes only
-	ofDrawRectangle(xOffset, yOffset, width, height);	//TODO: remove in the final build
+	//ofSetColor(ofColor::black);							//These 2 lines draw a black rectangle behind the element for placement purposes only
+	//ofDrawRectangle(xOffset, yOffset, width, height);	//TODO: remove in the final build
 
 	ofSetColor(ofColor::white);
 	if (fillMode)
@@ -57,4 +57,9 @@ void Image::setSize(int width, int height)
 void Image::setFillMode(bool fill)
 {
 	fillMode = fill;
+}
+
+bool Image::onClick(int x, int y, int button)
+{
+	return x >= xOffset && x <= xOffset + width && y >= yOffset && y <= yOffset + height;
 }

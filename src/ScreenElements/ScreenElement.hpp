@@ -22,6 +22,9 @@ public:
 	virtual void setSize(int width, int height) = 0;
 	virtual void setFillMode(bool fill) = 0;
 
-	virtual ElementType getType() = 0;
+	virtual bool onClick(int x, int y, int button) = 0;
+
+	virtual const ElementType getType() const = 0;
+	virtual const std::string getName() const = 0;
 
 };
