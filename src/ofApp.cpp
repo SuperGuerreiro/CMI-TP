@@ -17,36 +17,37 @@ void ofApp::setup(){
 	dir.listDir(DIRECTORY);
 	dir.allowExt("jpg");
 	dir.allowExt("png");
-	dir.allowExt("gif");
+	//dir.allowExt("gif");
 	dir.allowExt("mov");
 
 	dir.sort();
-	/*
-	int x = 50;
-	int y = 50;
-	*/
+	int index = -1;
 	for(int i = 0; i < dir.size(); i++){
-		string e = dir.getPath(i);
-		boost::filesystem::path p(e);
+		string pathname = dir.getPath(i);
+		boost::filesystem::path p(pathname);
 		if (p.has_extension())
 		{
 			string ext = p.extension().string();
 			if (ext == ".jpg" || ext == ".png" || ext == ".gif")
 			{
-				elements.add(new Image(e.c_str(), p.filename().string(), 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+				elements.add(new Image(pathname, 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+				index++;
 			}
 			else if (ext == ".mov")
 			{
-				elements.add(new Video(e.c_str(), p.filename().string(), 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+				elements.add(new Video(pathname, 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+				index++;
 			}
-
-
-			if (XML.loadFile(p.filename().string() + ".xml")) {
+			else
+			{
+				continue;
+			}
+			if (XML.loadFile(elements[index]->getName() + ".xml")) {
 				printf("%s_settings.xml loaded \n", p.filename().string());
 			}
 			else {
-				currImg.load(e.c_str());
-				XML.setValue("settings:name", p.filename().string());
+				currImg.load(pathname);
+				XML.setValue("settings:name", elements[index]->getName());
 				XML.setValue("settings:width", currImg.getWidth());
 				XML.setValue("settings:height", currImg.getHeight());
 
@@ -82,17 +83,8 @@ void ofApp::setup(){
 				XML.addValue("aaa", "as");
 
 
-				XML.saveFile(p.filename().string() + ".xml");
+				XML.saveFile(elements[index]->getName() + ".xml");
 			}
-
-			/*
-			x += 50 + ELEMENT_WIDTH;
-			if (x > 1300)
-			{
-				x = 50;
-				y += 50 + ELEMENT_HEIGHT;
-			}
-			*/
 		}
 	}
 	currentImage = 0;
@@ -104,24 +96,22 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	/*
-	for each (ScreenElement* e in elements)
-	{
-		e->update();
-	}
-	*/
 	elements.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	/*
-	for each (ScreenElement* e in elements)
+	if (isFullScreen)
 	{
-		e->draw();
+		if (elements.getSelectedIndex() != -1)
+		{
+			elements[elements.getSelectedIndex()]->draw(0, 0, width, height);
+		}
 	}
-	*/
-	elements.draw();
+	else
+	{
+		elements.draw();
+	}
 }
 
 //--------------------------------------------------------------
@@ -143,17 +133,18 @@ void ofApp::keyPressed(int key) {
 
 	}
 	elements.onKeyPressed(key);
+	//cout << key << endl;
 	switch (key) {
 	case OF_KEY_SHIFT:
 		isPaused = !isPaused;
 		fingerMovie.setPaused(isPaused);
 		cout << "A" << endl;
-		cout << elements.getSelected() << endl;
+		//cout << elements.getSelected() << endl;
 		break;
 
-	case OF_KEY_LEFT:
+	case OF_KEY_RETURN: //return = enter
 		isFullScreen = !isFullScreen;
-		cout << isFullScreen << endl;
+		//cout << isFullScreen << endl;
 		break;
 
 	case OF_KEY_RIGHT:
@@ -201,6 +192,8 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
+	width = w;
+	height = h;
 	elements.setSize(w, h);
 }
 

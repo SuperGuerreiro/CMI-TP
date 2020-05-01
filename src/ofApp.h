@@ -42,6 +42,6 @@ class ofApp : public ofBaseApp{
 		
 		//vector<ScreenElement*> elements;
 		Collection elements;
-
+		int width, height;
 };
 

@@ -55,6 +55,11 @@ void Collection::draw()
 	}
 }
 
+void Collection::draw(int xOffset, int yOffset, int width, int height)
+{
+	this->draw();
+}
+
 void Collection::setOffset(int xOffset, int yOffset)
 {
 	this->xOffset = xOffset;
@@ -100,20 +105,6 @@ void Collection::add(ScreenElement* e)
 	elements.push_back(e);
 }
 
-std::string Collection::getSelected()
-{
-	if (selected == -1)
-	{
-		return "";
-	}
-	return elements[selected]->getName();
-}
-
-void Collection::unselect()
-{
-	selected = -1;
-}
-
 void Collection::onKeyPressed(int key)
 {
 	switch (key)
@@ -148,6 +139,11 @@ void Collection::scroll(float value)
 	scrollVal = std::min(scrollVal, 1.0f);
 	scrollVal = std::max(scrollVal, 0.0f);
 	resetAttributes();
+}
+
+void Collection::unselect()
+{
+	selected = -1;
 }
 
 void Collection::resetAttributes()

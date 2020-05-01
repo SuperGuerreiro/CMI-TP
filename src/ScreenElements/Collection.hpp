@@ -11,6 +11,7 @@ public:
 
 	void update() override;
 	void draw() override;
+	void draw(int xOffset, int yOffset, int width, int height) override;
 
 	void setOffset(int xOffset, int yOffset) override;
 	void setSize(int width, int height) override;
@@ -22,11 +23,13 @@ public:
 	const inline std::string getName() const override { return ""; };
 
 	void add(ScreenElement* e);
-	std::string getSelected();
-	void unselect();
 	void onKeyPressed(int key);
 	void setElementsSize(int width, int height);
 	void scroll(float value);
+
+	inline int getSelectedIndex() const { return selected; };
+	inline ScreenElement* operator[](int i) const { return elements[i]; };
+	void unselect();
 
 private:
 	int xOffset;

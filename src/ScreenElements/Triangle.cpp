@@ -19,6 +19,11 @@ void Triangle::draw()
 		glm::vec2(xOffset + cos((PI / 3) * 4 + rotation) * size, yOffset + sin((PI / 3) * 4 + rotation) * size));
 }
 
+void Triangle::draw(int xOffset, int yOffset, int width, int height)
+{
+	//TODO: width/height based on parameters
+}
+
 void Triangle::setRotation(float rotation)
 {
 	this->rotation = PI * 2 * rotation;
