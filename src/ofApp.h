@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ScreenElements/Collection.hpp"
 #include "ofxXmlSettings.h"
+#include "ofxCvHaarFinder.h"
 
 
 class ofApp : public ofBaseApp{
@@ -40,8 +41,17 @@ class ofApp : public ofBaseApp{
 		bool                isPaused;
 		bool				isFullScreen;
 		
+		//WebCam
+		ofVideoGrabber vidGrabber;
+		int camWidth;
+		int camHeight;
+		bool camDebug;
+
+		ofImage screenCap;
+		ofxCvHaarFinder finder;
+		unsigned int currTime, intervalTime;
+
 		//vector<ScreenElement*> elements;
 		Collection elements;
 		int width, height;
 };
-

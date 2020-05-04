@@ -10,7 +10,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
+	camDebug = false;
 	isFullScreen = false;
 	elements.setElementsSize(ELEMENT_WIDTH, ELEMENT_HEIGHT);
 
@@ -89,18 +89,37 @@ void ofApp::setup(){
 	}
 	currentImage = 0;
 
-	ofBackground(ofColor::white);
+	//Camera Setup
+	// try to grab at this size
+	camWidth = 640;
+	camHeight = 480;
 
+	vidGrabber.setVerbose(true);
+	vidGrabber.setup(camWidth, camHeight);
+
+	ofEnableAlphaBlending();
+
+	//Needs this file to detect
+	finder.setup("haarcascade_frontalface_default.xml");
+
+	currTime = 0;
+	intervalTime = 60;
+
+	ofBackground(ofColor::white);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
 	elements.update();
+
+	vidGrabber.update();
+	currTime++;
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+
 	if (isFullScreen)
 	{
 		if (elements.getSelectedIndex() != -1)
@@ -112,6 +131,27 @@ void ofApp::draw() {
 	{
 		elements.draw();
 	}
+
+	if (camDebug) {
+		vidGrabber.draw(0, 0);
+
+		if (currTime > intervalTime) {
+			screenCap.grabScreen(0, 0, camWidth, camHeight);
+			screenCap.save("screenshot.jpg");
+			screenCap.load("screenshot.jpg");
+			finder.findHaarObjects(screenCap);
+			
+			currTime = 0;
+		}
+
+		ofNoFill(); //To draw sqared unfilled
+		for (unsigned int i = 0; i < finder.blobs.size(); i++) {
+			ofRectangle cur = finder.blobs[i].boundingRect;
+			ofDrawRectangle(cur.x, cur.y, cur.width, cur.height);
+		}
+		
+	}
+
 }
 
 //--------------------------------------------------------------
@@ -147,10 +187,10 @@ void ofApp::keyPressed(int key) {
 		//cout << isFullScreen << endl;
 		break;
 
-	case OF_KEY_RIGHT:
-
+	//Camera Debug
+	case OF_KEY_F1:
+		camDebug = !camDebug;
 		break;
-
 
 	}
 }
