@@ -31,16 +31,42 @@ void Image::draw()
 		size_t y = self.getPixels().getHeight();
 		float sourceAR = (float)x / y;
 		float displayAR = (float)width / height;
-		if (sourceAR < displayAR)
+		int nWidth = width;
+		int nHeight = height;
+		if (y < nHeight)
 		{
-			int nWidth = width * sourceAR;
-			self.draw(xOffset + ((width - nWidth) * 0.5), yOffset, nWidth, height);
+			nHeight = y;
+			nWidth = x;
+			if (width < nWidth)
+			{
+				float ratio = (float)width / nWidth;
+				nWidth = width;
+				nHeight = ratio * nHeight;
+			}
+		}
+		else if (x < nWidth)
+		{
+			nHeight = y;
+			nWidth = x;
+			if (height < nHeight)
+			{
+				float ratio = (float)height / nHeight;
+				nHeight = height;
+				nWidth = ratio * nWidth;
+			}
 		}
 		else
 		{
-			int nHeight = height / sourceAR;
-			self.draw(xOffset, yOffset + ((height - nHeight) * 0.5), width, nHeight);
+			if (sourceAR < displayAR)
+			{
+				nWidth = height * sourceAR;
+			}
+			else
+			{
+				nHeight = width / sourceAR;
+			}
 		}
+		self.draw(xOffset + ((width - nWidth) * 0.5), yOffset + ((height - nHeight) * 0.5), nWidth, nHeight);
 	}
 }
 
@@ -57,16 +83,42 @@ void Image::draw(int xOffset, int yOffset, int width, int height)
 		size_t y = self.getPixels().getHeight();
 		float sourceAR = (float)x / y;
 		float displayAR = (float)width / height;
-		if (sourceAR < displayAR)
+		int nWidth = width;
+		int nHeight = height;
+		if (y < nHeight)
 		{
-			int nWidth = width * sourceAR;
-			self.draw(xOffset + ((width - nWidth) * 0.5), yOffset, nWidth, height);
+			nHeight = y;
+			nWidth = x;
+			if (width < nWidth)
+			{
+				float ratio = (float)width / nWidth;
+				nWidth = width;
+				nHeight = ratio * nHeight;
+			}
+		}
+		else if (x < nWidth)
+		{
+			nHeight = y;
+			nWidth = x;
+			if (height < nHeight)
+			{
+				float ratio = (float)height / nHeight;
+				nHeight = height;
+				nWidth = ratio * nWidth;
+			}
 		}
 		else
 		{
-			int nHeight = height / sourceAR;
-			self.draw(xOffset, yOffset + ((height - nHeight) * 0.5), width, nHeight);
+			if (sourceAR < displayAR)
+			{
+				nWidth = height * sourceAR;
+			}
+			else
+			{
+				nHeight = width / sourceAR;
+			}
 		}
+		self.draw(xOffset + ((width - nWidth) * 0.5), yOffset + ((height - nHeight) * 0.5), nWidth, nHeight);
 	}
 }
 
