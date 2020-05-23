@@ -2,14 +2,22 @@
 
 #include "ofMain.h"
 
+#define CHAR_WIDTH 8
+#define CHAR_HEIGHT 10
+
 enum class ElementType
 {
 	None = 0,
 	Image,
 	Video,
 	Triangle,
-	Collection
+	Collection,
+	TopBar,
+	Dropdown,
+	Button
 };
+
+using SimpleCallback = std::function<void()>;//void(*)();
 
 class ScreenElement
 {

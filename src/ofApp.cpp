@@ -3,16 +3,30 @@
 #include "ScreenElements/Image.hpp"
 #include "ScreenElements/Video.hpp"
 #include "ScreenElements/Triangle.hpp"
+#include "ScreenElements/Dropdown.hpp"
+#include "ScreenElements/Button.hpp"
 
 #define DIRECTORY "gallery/"
 #define ELEMENT_WIDTH 300
 #define ELEMENT_HEIGHT 300
+#define TOPBAR_HEIGHT 32
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	currentView = PresentMode::Gallery;
 	camDebug = false;
 	isFullScreen = false;
 	elements.setElementsSize(ELEMENT_WIDTH, ELEMENT_HEIGHT);
+	elements.setOffset(0, TOPBAR_HEIGHT);
+
+	Dropdown* td = new Dropdown(0, 0, 0, 0, "File", ofColor::white);
+	Button* tb = new Button(0, 0, 0, 0, "Display", ofColor::black, [this] { currentView = PresentMode::ViewItem; });
+	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
+	tb = new Button(0, 0, 0, 0, "Details", ofColor::black, [] {});
+	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
+	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
+	td = new Dropdown(0, 0, 0, 0, "Camera Mode", ofColor::white);
+	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
 
 	dir.listDir(DIRECTORY);
 	dir.allowExt("jpg");
@@ -111,6 +125,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	topbar.update();
 	elements.update();
 
 	vidGrabber.update();
@@ -119,17 +134,23 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-
-	if (isFullScreen)
+	switch (currentView)
 	{
+	case PresentMode::Gallery:
+		elements.draw();
+		topbar.draw();
+		break;
+	case PresentMode::ViewItem:
 		if (elements.getSelectedIndex() != -1)
 		{
 			elements[elements.getSelectedIndex()]->draw(0, 0, width, height);
 		}
-	}
-	else
-	{
-		elements.draw();
+		break;
+	case PresentMode::Camera:
+		//meter as cenas da camara aqui?
+		break;
+	default:
+		break;
 	}
 
 	if (camDebug) {
@@ -183,8 +204,16 @@ void ofApp::keyPressed(int key) {
 		break;
 
 	case OF_KEY_RETURN: //return = enter
-		isFullScreen = !isFullScreen;
+		//isFullScreen = !isFullScreen;
 		//cout << isFullScreen << endl;
+		if (currentView == PresentMode::ViewItem)
+		{
+			currentView = PresentMode::Gallery;
+		}
+		else
+		{
+			currentView = PresentMode::ViewItem;
+		}
 		break;
 
 	//Camera Debug
@@ -212,7 +241,10 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	elements.onClick(x, y, button);
+	if (!topbar.onClick(x, y, button))
+	{
+		elements.onClick(x, y, button);
+	}
 }
 
 //--------------------------------------------------------------
@@ -234,7 +266,8 @@ void ofApp::mouseExited(int x, int y){
 void ofApp::windowResized(int w, int h){
 	width = w;
 	height = h;
-	elements.setSize(w, h);
+	topbar.setSize(w, TOPBAR_HEIGHT);
+	elements.setSize(w, h - TOPBAR_HEIGHT);
 }
 
 //--------------------------------------------------------------

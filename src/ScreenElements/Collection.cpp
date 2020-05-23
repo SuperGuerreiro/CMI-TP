@@ -27,7 +27,7 @@ Collection::~Collection()
 {
 	for each (ScreenElement* e in elements)
 	{
-		free(e);
+		delete e;
 	}
 }
 
@@ -46,7 +46,7 @@ void Collection::draw()
 		int quadXOffset, quadYOffset;
 		quadXOffset = xOffset + padding + spacing / 2 + (selected % perRow) * (padding + elementWidth + spacing) - SELECTED_QUAD_PADDING;
 		quadYOffset = yOffset + padding + (selected / perRow) * (padding + elementHeight) - scrollOffset * scrollVal - SELECTED_QUAD_PADDING;
-		ofSetColor(ofColor::blue);
+		ofSetColor(ofColor::skyBlue);
 		ofDrawRectangle(quadXOffset, quadYOffset, elementWidth + SELECTED_QUAD_PADDING * 2, elementHeight + SELECTED_QUAD_PADDING * 2);
 	}
 	for each (ScreenElement* e in elements)
@@ -57,7 +57,7 @@ void Collection::draw()
 
 void Collection::draw(int xOffset, int yOffset, int width, int height)
 {
-	this->draw();
+	this->draw(); //too lazy to do this
 }
 
 void Collection::setOffset(int xOffset, int yOffset)

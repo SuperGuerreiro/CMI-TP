@@ -2,9 +2,18 @@
 
 #include "ofMain.h"
 #include "ScreenElements/Collection.hpp"
+#include "ScreenElements/TopBar.hpp"
 #include "ofxXmlSettings.h"
 #include "ofxCvHaarFinder.h"
 
+
+enum class PresentMode
+{
+	None = 0,
+	Gallery,
+	ViewItem,
+	Camera
+};
 
 class ofApp : public ofBaseApp{
 	
@@ -40,6 +49,8 @@ class ofApp : public ofBaseApp{
 		ofVideoPlayer 		fingerMovie;
 		bool                isPaused;
 		bool				isFullScreen;
+
+		PresentMode currentView = PresentMode::None;
 		
 		//WebCam
 		ofVideoGrabber vidGrabber;
@@ -52,6 +63,7 @@ class ofApp : public ofBaseApp{
 		unsigned int currTime, intervalTime;
 
 		//vector<ScreenElement*> elements;
+		TopBar topbar;
 		Collection elements;
 		int width, height;
 };
