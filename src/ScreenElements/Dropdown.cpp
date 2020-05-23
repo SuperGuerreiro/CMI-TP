@@ -1,5 +1,7 @@
 #include "Dropdown.hpp"
 
+#define TEXT_PADDING 6
+
 Dropdown::Dropdown()
 {
 	xOffset = 0;
@@ -40,10 +42,21 @@ void Dropdown::draw()
 	if (drawElements)
 	{
 		ofSetColor(ofColor::white);
-		ofDrawRectangle(xOffset, yOffset + height, maxElementWidth, totalHeight);
+		ofDrawRectangle(xOffset, yOffset + height, maxElementWidth + TEXT_PADDING * 2, totalHeight);
+		ofNoFill();
+		ofSetColor(ofColor::black);
+		ofDrawRectangle(xOffset, yOffset + height, maxElementWidth + TEXT_PADDING * 2, totalHeight);
+		ofFill();
+		int lineHeight = yOffset + height;
 		for each (ScreenElement* e in elements)
 		{
 			e->draw();
+			if (yOffset + height < lineHeight)
+			{
+				ofSetColor(ofColor::black);
+				ofDrawLine(xOffset, lineHeight, xOffset + maxElementWidth + TEXT_PADDING * 2, lineHeight);
+			}
+			lineHeight += CHAR_HEIGHT + TEXT_PADDING * 2;
 		}
 	}
 }
@@ -110,8 +123,8 @@ void Dropdown::resetAttributes()
 	for each (ScreenElement* e in elements)
 	{
 		e->setOffset(xOffset, y);
-		e->setSize(maxElementWidth, CHAR_HEIGHT);
-		y += CHAR_HEIGHT;
+		e->setSize(maxElementWidth + TEXT_PADDING * 2, CHAR_HEIGHT + TEXT_PADDING * 2);
+		y += CHAR_HEIGHT + TEXT_PADDING * 2;
 	}
 	totalHeight = y - yOffset - height;
 }

@@ -24,6 +24,8 @@ void ofApp::setup(){
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	tb = new Button(0, 0, 0, 0, "Details", ofColor::black, [] {});
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
+	tb = new Button(0, 0, 0, 0, "Test", ofColor::black, [] {});
+	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
 	td = new Dropdown(0, 0, 0, 0, "Camera Mode", ofColor::white);
 	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
@@ -168,9 +170,10 @@ void ofApp::draw() {
 		ofNoFill(); //To draw sqared unfilled
 		for (unsigned int i = 0; i < finder.blobs.size(); i++) {
 			ofRectangle cur = finder.blobs[i].boundingRect;
+			ofSetColor(ofColor::black);
 			ofDrawRectangle(cur.x, cur.y, cur.width, cur.height);
 		}
-		
+		ofFill();
 	}
 
 }

@@ -24,7 +24,7 @@ void Button::update()
 void Button::draw()
 {
 	ofSetColor(color);
-	ofDrawBitmapString(name, xOffset, yOffset + CHAR_HEIGHT);
+	ofDrawBitmapString(name, xOffset + (width - name.length() * CHAR_WIDTH) / 2, yOffset + CHAR_HEIGHT + (height - CHAR_HEIGHT) / 2);
 }
 
 void Button::draw(int xOffset, int yOffset, int width, int height)
