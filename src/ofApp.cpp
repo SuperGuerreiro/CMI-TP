@@ -14,10 +14,11 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	currentView = PresentMode::Gallery;
-	camDebug = false;
 	isFullScreen = false;
 	elements.setElementsSize(ELEMENT_WIDTH, ELEMENT_HEIGHT);
 	elements.setOffset(0, TOPBAR_HEIGHT);
+
+	cam.setup(640, 480);
 
 	Dropdown* td = new Dropdown(0, 0, 0, 0, "File", ofColor::white);
 	Button* tb = new Button(0, 0, 0, 0, "Display", ofColor::black, [this] { currentView = PresentMode::ViewItem; });
@@ -27,8 +28,8 @@ void ofApp::setup(){
 	tb = new Button(0, 0, 0, 0, "Test", ofColor::black, [] {});
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
-	td = new Dropdown(0, 0, 0, 0, "Camera Mode", ofColor::white);
-	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
+	tb = new Button(0, 0, 0, 0, "CamMode", ofColor::white, [this] { currentView = PresentMode::Camera; });
+	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
 
 	dir.listDir(DIRECTORY);
 	dir.allowExt("jpg");
@@ -105,23 +106,6 @@ void ofApp::setup(){
 	}
 	currentImage = 0;
 
-	//Camera Setup
-	// try to grab at this size
-	camWidth = 640;
-	camHeight = 480;
-
-	vidGrabber.setVerbose(true);
-	vidGrabber.setup(camWidth, camHeight);
-
-	ofEnableAlphaBlending();
-
-	//Needs this file to detect
-	finder.setup("haarcascade_frontalface_default.xml");
-
-	currTime = 0;
-	intervalTime = 60;
-
-	ofBackground(ofColor::white);
 
 }
 
@@ -129,9 +113,7 @@ void ofApp::setup(){
 void ofApp::update() {
 	topbar.update();
 	elements.update();
-
-	vidGrabber.update();
-	currTime++;
+	cam.update();
 }
 
 //--------------------------------------------------------------
@@ -150,30 +132,10 @@ void ofApp::draw() {
 		break;
 	case PresentMode::Camera:
 		//meter as cenas da camara aqui?
+		cam.draw();
 		break;
 	default:
 		break;
-	}
-
-	if (camDebug) {
-		vidGrabber.draw(0, 0);
-
-		if (currTime > intervalTime) {
-			screenCap.grabScreen(0, 0, camWidth, camHeight);
-			screenCap.save("screenshot.jpg");
-			screenCap.load("screenshot.jpg");
-			finder.findHaarObjects(screenCap);
-			
-			currTime = 0;
-		}
-
-		ofNoFill(); //To draw sqared unfilled
-		for (unsigned int i = 0; i < finder.blobs.size(); i++) {
-			ofRectangle cur = finder.blobs[i].boundingRect;
-			ofSetColor(ofColor::black);
-			ofDrawRectangle(cur.x, cur.y, cur.width, cur.height);
-		}
-		ofFill();
 	}
 
 }
@@ -217,11 +179,6 @@ void ofApp::keyPressed(int key) {
 		{
 			currentView = PresentMode::ViewItem;
 		}
-		break;
-
-	//Camera Debug
-	case OF_KEY_F1:
-		camDebug = !camDebug;
 		break;
 
 	}
