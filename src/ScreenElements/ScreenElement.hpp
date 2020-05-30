@@ -15,7 +15,9 @@ enum class ElementType
 	TopBar,
 	Dropdown,
 	Button,
-	Camera
+	Camera,
+	Group,
+	Text
 };
 
 using SimpleCallback = std::function<void()>;//void(*)();

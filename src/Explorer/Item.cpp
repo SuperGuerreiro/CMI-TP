@@ -5,9 +5,14 @@ Item::Item(Image* image)
 	name = image->getName();
 	if (XML.loadFile(name + ".xml"))
 	{
-		printf("%s_settings.xml loaded \n", name);
+		printf("%s.xml loaded \n", name.c_str());
 
 		//TODO: load the values
+		std::string t = XML.getValue("Tags:aaa", "");
+
+		lightness = XML.getValue("settings:lightness", 0.);
+		brightness = XML.getValue("settings:brightness", 0.);
+		hue = XML.getValue("settings:hue", 0.);
 	}
 	else
 	{
@@ -57,6 +62,6 @@ Item::~Item()
 
 void Item::saveXML()
 {
-	printf("%s_settings.xml saved \n", name);
+	printf("%s.xml saved \n", name.c_str());
 	XML.saveFile(name + ".xml");
 }
