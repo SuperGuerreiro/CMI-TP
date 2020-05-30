@@ -7,7 +7,9 @@ Item::Item(Image* image)
 	{
 		printf("%s.xml loaded \n", name.c_str());
 
-		//TODO: load the values
+		width = XML.getValue("settings:width", 0);
+		height = XML.getValue("settings:height", 0);
+
 		std::string t = XML.getValue("Tags:aaa", "");
 
 		lightness = XML.getValue("settings:lightness", 0.);
@@ -16,8 +18,8 @@ Item::Item(Image* image)
 	}
 	else
 	{
-		int width = image->getOFHandle().getWidth();
-		int height = image->getOFHandle().getHeight();
+		width = image->getOFHandle().getWidth();
+		height = image->getOFHandle().getHeight();
 
 		XML.setValue("settings:name", name);
 		XML.setValue("settings:width", width);
@@ -58,6 +60,13 @@ Item::Item(Video* video)
 Item::~Item()
 {
 
+}
+
+std::string Item::getPropertyString() const
+{
+	char res[1028];
+	sprintf(res, "Filename: %s\nSize: %dx%d\n\nLightness: %f\nBrightness: %f\nHue: %f\n", name.c_str(), width, height, lightness, brightness, hue);
+	return res;
 }
 
 void Item::saveXML()

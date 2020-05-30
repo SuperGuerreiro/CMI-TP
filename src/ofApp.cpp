@@ -103,6 +103,7 @@ void ofApp::draw() {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 	elements.onKeyPressed(key);
+	updateFileProperties();
 	switch (key) {
 	case OF_KEY_RETURN: //return = enter
 		if (currentView == PresentMode::ViewItem)
@@ -137,6 +138,7 @@ void ofApp::mousePressed(int x, int y, int button){
 	if (!topbar.onClick(x, y, button))
 	{
 		elements.onClick(x, y, button);
+		updateFileProperties();
 	}
 }
 
@@ -176,4 +178,15 @@ void ofApp::mouseScrolled(int x, int y, float scrollX, float scrollY){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
 
+}
+
+
+
+void ofApp::updateFileProperties()
+{
+	if (elements.getSelectedIndex() != -1)
+	{
+		Text* t = (Text*)propertiesScreen[0];
+		t->setText(explorer[elements.getSelectedIndex()].getPropertyString());
+	}
 }

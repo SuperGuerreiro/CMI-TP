@@ -40,6 +40,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);		
 		void mouseScrolled(int x, int y, float scrollX, float scrollY);
 		
+private:
 		ofDirectory dir;
 
 		PresentMode currentView = PresentMode::None;
@@ -50,4 +51,7 @@ class ofApp : public ofBaseApp{
 		Explorer explorer;
 		Group propertiesScreen;
 		int width, height;
+
+
+		void updateFileProperties();
 };
