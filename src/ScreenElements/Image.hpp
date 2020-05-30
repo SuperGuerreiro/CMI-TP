@@ -21,6 +21,10 @@ public:
 	const inline ElementType getType() const override { return ElementType::Image; };
 	const inline std::string getName() const override { return name; };
 
+	inline ofImage& getOFHandle() { return self; };
+	const inline int getId() const { return id; };
+	inline void setId(int newId) { id = newId; };
+
 
 private:
 	int xOffset;
@@ -31,4 +35,5 @@ private:
 
 	std::string name;
 	ofImage self;
+	int id = -1;
 };

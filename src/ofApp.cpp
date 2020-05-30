@@ -47,14 +47,18 @@ void ofApp::setup(){
 			string ext = p.extension().string();
 			if (ext == ".jpg" || ext == ".png" || ext == ".gif")
 			{
-				elements.add(new Image(pathname, 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+				Image* t = new Image(pathname, 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT);
+				elements.add(t);
+				explorer.add(t);
 				index++;
 			}
 			else if (ext == ".mov")
 			{
-				elements.add(new Video(pathname, 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT));
+				Video* t = new Video(pathname, 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT);
+				elements.add(t);
+				explorer.add(t);
 				index++;
-			}
+			}/*
 			else
 			{
 				continue;
@@ -101,7 +105,7 @@ void ofApp::setup(){
 
 
 				XML.saveFile(elements[index]->getName() + ".xml");
-			}
+			}*/
 		}
 	}
 	currentImage = 0;

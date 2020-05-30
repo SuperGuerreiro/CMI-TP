@@ -4,6 +4,7 @@
 #include "ScreenElements/Collection.hpp"
 #include "ScreenElements/TopBar.hpp"
 #include "ScreenElements/Camera.hpp"
+#include "Explorer/Explorer.hpp"
 #include "ofxXmlSettings.h"
 
 
@@ -69,5 +70,6 @@ class ofApp : public ofBaseApp{
 		//vector<ScreenElement*> elements;
 		TopBar topbar;
 		Collection elements;
+		Explorer explorer;
 		int width, height;
 };
