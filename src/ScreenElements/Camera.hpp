@@ -14,7 +14,7 @@ public:
 	void update() override;
 	void draw() override;
 	void draw(int xOffset, int yOffset, int width, int height) override;
-	void detectFaces();
+	void detectFaces(ofPixels videoPixels);
 
 	void setOffset(int xOffset, int yOffset) override;
 	void setSize(int width, int height) override;
@@ -39,8 +39,7 @@ private:
 	ofVideoGrabber vidGrabber;
 	//bool camDebug;
 
-
-
+	const unsigned int INTERVAL_TIME = 10;
 
 	ofImage screenCap;
 	ofxCvHaarFinder finder;

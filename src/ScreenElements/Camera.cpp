@@ -17,10 +17,9 @@ void Camera::setup(int camWidth, int camHeight)
 	ofEnableAlphaBlending();
 
 	//Needs this file to detect
-	finder.setup("haarcascade_frontalface_default.xml");
+	finder.setup("haarcascade_frontalface_alt.xml");
 
 	currTime = 0;
-	intervalTime = 60;
 
 	ofBackground(ofColor::white);
 }
@@ -39,32 +38,29 @@ void Camera::update() {
 void Camera::draw() 
 {
 	vidGrabber.draw(0, 0);
+	detectFaces(vidGrabber.getPixels());
 
-	if (currTime > intervalTime) {
-		screenCap.grabScreen(0, 0, camWidth, camHeight);
-		screenCap.save("screenshot.jpg");
-		screenCap.load("screenshot.jpg");
-		finder.findHaarObjects(screenCap);
-
-		currTime = 0;
-	}
-
-	ofNoFill(); //To draw sqared unfilled
-	for (unsigned int i = 0; i < finder.blobs.size(); i++) {
-		ofRectangle cur = finder.blobs[i].boundingRect;
-		//ofSetColor(ofColor::black);
-		ofDrawRectangle(cur.x, cur.y, cur.width, cur.height);
-	}
-	
-	ofFill();
 }
 
 void Camera::draw(int xOffset, int yOffset, int width, int height)
 {
 }
 
-void Camera::detectFaces()
+void Camera::detectFaces(ofPixels videoPixels)
 {
+	//Finds faces in a given interval of frames
+	if (currTime > INTERVAL_TIME) {
+		finder.findHaarObjects(videoPixels);
+		currTime = 0;
+	}
+
+	ofNoFill(); //To draw square unfilled
+	for (unsigned int i = 0; i < finder.blobs.size(); i++) {
+		ofRectangle cur = finder.blobs[i].boundingRect;
+		ofDrawRectangle(cur.x, cur.y, cur.width, cur.height);
+	}
+
+	ofFill();
 }
 
 void Camera::setOffset(int xOffset, int yOffset)

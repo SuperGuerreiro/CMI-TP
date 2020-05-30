@@ -18,7 +18,7 @@ void ofApp::setup(){
 	elements.setElementsSize(ELEMENT_WIDTH, ELEMENT_HEIGHT);
 	elements.setOffset(0, TOPBAR_HEIGHT);
 
-	cam.setup(640, 480);
+	cam.setup(320, 240);
 
 	Dropdown* td = new Dropdown(0, 0, 0, 0, "File", ofColor::white);
 	Button* tb = new Button(0, 0, 0, 0, "Display", ofColor::black, [this] { currentView = PresentMode::ViewItem; });
