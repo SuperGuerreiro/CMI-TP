@@ -21,7 +21,7 @@ public:
 	const inline ElementType getType() const override { return ElementType::Video; };
 	const inline std::string getName() const override { return name; };
 
-	inline ofVideoPlayer getOFHandle() const { return self; };
+	inline ofVideoPlayer& getOFHandle() { return self; };
 	const inline int getId() const { return id; };
 	inline void setId(int newId) { id = newId; };
 

@@ -18,7 +18,6 @@ Item::Item(Image* image)
 		XML.setValue("settings:width", width);
 		XML.setValue("settings:height", height);
 
-		//ofImage ofHandle = image->getOFHandle();
 		for (int j = 0; j < width; j++)
 		{
 			for (int k = 0; k < height; k++)
