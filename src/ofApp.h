@@ -4,6 +4,7 @@
 #include "ScreenElements/Collection.hpp"
 #include "ScreenElements/TopBar.hpp"
 #include "ScreenElements/Camera.hpp"
+#include "Explorer/Explorer.hpp"
 #include "ofxXmlSettings.h"
 
 
@@ -37,37 +38,13 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);		
 		void mouseScrolled(int x, int y, float scrollX, float scrollY);
 		
-		// we will have a dynamic number of images, based on the content of a directory:
 		ofDirectory dir;
-		vector<ofImage> images;
-		
-		ofxXmlSettings XML;
-		ofColor a;
-
-		ofImage currImg;
-		int currentImage;
-
-		ofVideoPlayer 		fingerMovie;
-		bool                isPaused;
-		bool				isFullScreen;
 
 		PresentMode currentView = PresentMode::None;
-		/*
-		//WebCam
-		ofVideoGrabber vidGrabber;
-		int camWidth;
-		int camHeight;
-		bool camDebug;
-
-		ofImage screenCap;
-		ofxCvHaarFinder finder;
-		unsigned int currTime, intervalTime;
-		*/
 
 		Camera cam;
-
-		//vector<ScreenElement*> elements;
 		TopBar topbar;
 		Collection elements;
+		Explorer explorer;
 		int width, height;
 };
