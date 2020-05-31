@@ -39,6 +39,7 @@ void Video::update()
 		
 		//Shows currThumbnail for a given time frame
 		if (currTime > INTERVAL_TIME) {
+
 			drawThumbnail(thumbnailFrames[currThumb++]);
 			if (currThumb == thumbnailFrames.size()) {
 				currThumb = 0;
@@ -233,4 +234,8 @@ void Video::generateThumbnailFrames() {
 void Video::setFullScreen(bool bFullScreen) {
 	isFullScreen = bFullScreen;
 	self.firstFrame();
+}
+
+float Video::getRuntime() {
+	return self.getDuration();
 }

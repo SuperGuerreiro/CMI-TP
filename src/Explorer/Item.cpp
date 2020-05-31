@@ -90,6 +90,7 @@ Item::Item(Video* video)
 		XML.setValue("settings:lightness", lightness);
 		XML.setValue("settings:brightness", brightness);
 		XML.setValue("settings:hue", hue);
+		XML.setValue("settings:runtime", video->getRuntime()); //in seconds
 
 		XML.setValue("Tags:rabo", "rabo");
 		XML.setValue("Tags:aaa", "as");
