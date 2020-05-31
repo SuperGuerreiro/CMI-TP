@@ -64,8 +64,13 @@ Item::~Item()
 
 std::string Item::getPropertyString() const
 {
-	char res[1028];
-	sprintf(res, "Filename: %s\nSize: %dx%d\n\nLightness: %f\nBrightness: %f\nHue: %f\n", name.c_str(), width, height, lightness, brightness, hue);
+	char additional[512];
+	if (true)
+	{
+		sprintf(additional, "");
+	}
+	char res[1024];
+	sprintf(res, "Filename: %s\nSize: %dx%d\n\nLightness: %f\nBrightness: %f\nHue: %f\n\n%s", name.c_str(), width, height, lightness, brightness, hue, additional);
 	return res;
 }
 

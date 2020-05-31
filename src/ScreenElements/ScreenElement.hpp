@@ -20,7 +20,7 @@ enum class ElementType
 	Text
 };
 
-using SimpleCallback = std::function<void()>;//void(*)();
+using SimpleCallback = std::function<void()>;
 
 class ScreenElement
 {

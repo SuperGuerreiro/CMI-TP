@@ -22,6 +22,8 @@ private:
 	float brightness = 0;
 	float hue = 0;
 
+	int viewers = 0;
+
 	ofxXmlSettings XML;
 
 };

@@ -13,8 +13,8 @@ Dropdown::Dropdown()
 	color = ofColor::black;
 }
 
-Dropdown::Dropdown(int xOffset, int yOffset, int width, int height, std::string name, ofColor color)
-	: xOffset(xOffset), yOffset(yOffset), width(width), height(height), name(name), color(color)
+Dropdown::Dropdown(int xOffset, int yOffset, int width, int height, std::string name, ofColor color, ofColor bgColor)
+	: xOffset(xOffset), yOffset(yOffset), width(width), height(height), name(name), color(color), bgColor(bgColor)
 {
 	drawElements = false;
 }
@@ -37,6 +37,8 @@ void Dropdown::update()
 
 void Dropdown::draw()
 {
+	ofSetColor(bgColor);
+	ofDrawRectangle(xOffset, yOffset, width, height);
 	ofSetColor(color);
 	ofDrawBitmapString(name, xOffset, yOffset + CHAR_HEIGHT);
 	if (drawElements)
