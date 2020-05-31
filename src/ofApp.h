@@ -4,6 +4,7 @@
 #include "ScreenElements/Collection.hpp"
 #include "ScreenElements/TopBar.hpp"
 #include "ScreenElements/Camera.hpp"
+#include "ScreenElements/Group.hpp"
 #include "Explorer/Explorer.hpp"
 #include "ofxXmlSettings.h"
 
@@ -14,7 +15,8 @@ enum class PresentMode
 	None = 0,
 	Gallery,
 	ViewItem,
-	Camera
+	Camera,
+	ItemProperties
 };
 
 class ofApp : public ofBaseApp{
@@ -38,6 +40,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);		
 		void mouseScrolled(int x, int y, float scrollX, float scrollY);
 		
+private:
 		ofDirectory dir;
 
 		PresentMode currentView = PresentMode::None;
@@ -46,5 +49,9 @@ class ofApp : public ofBaseApp{
 		TopBar topbar;
 		Collection elements;
 		Explorer explorer;
+		Group propertiesScreen;
 		int width, height;
+
+
+		void updateFileProperties();
 };

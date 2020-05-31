@@ -11,10 +11,13 @@ public:
 	Item(Video* video);
 	~Item();
 
+	std::string getPropertyString() const;
 	void saveXML();
 
 private:
 	std::string name;
+	int width, height;
+
 	float lightness = 0;
 	float brightness = 0;
 	float hue = 0;

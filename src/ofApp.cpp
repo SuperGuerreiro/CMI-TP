@@ -5,6 +5,7 @@
 #include "ScreenElements/Triangle.hpp"
 #include "ScreenElements/Dropdown.hpp"
 #include "ScreenElements/Button.hpp"
+#include "ScreenElements/Text.hpp"
 
 #define DIRECTORY "gallery/"
 #define ELEMENT_WIDTH 300
@@ -20,13 +21,15 @@ void ofApp::setup(){
 	cam.setup(320, 240);
 
 	Dropdown* td = new Dropdown(0, 0, 0, 0, "File", ofColor::white);
-	Button* tb = new Button(0, 0, 0, 0, "Display", ofColor::black, [this] { currentView = PresentMode::ViewItem; });
+	Button* tb = new Button(0, 0, 0, 0, "Browse", ofColor::black, [this] { currentView = PresentMode::Gallery; });
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
-	tb = new Button(0, 0, 0, 0, "Details", ofColor::black, [] {});
+	tb = new Button(0, 0, 0, 0, "Display", ofColor::black, [this] { currentView = PresentMode::ViewItem; });
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
-	tb = new Button(0, 0, 0, 0, "Test", ofColor::black, [] {});
+	tb = new Button(0, 0, 0, 0, "Properties", ofColor::black, [this] { currentView = PresentMode::ItemProperties; });
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
+	tb = new Button(0, 0, 0, 0, "Presentation Mode", ofColor::white, [this] {  });
+	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	tb = new Button(0, 0, 0, 0, "CamMode", ofColor::white, [this] { currentView = PresentMode::Camera; });
 	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
 
@@ -60,6 +63,8 @@ void ofApp::setup(){
 			}
 		}
 	}
+
+	propertiesScreen.add(new Text("THIS IS A TEXT\nA REALLY BIG TEXT\nNOW TELL ME WHAT YOU WANT\nWHAT YOU REALLY REALLY WANT", ofColor::black, 0 + 10, TOPBAR_HEIGHT + 10));
 }
 
 //--------------------------------------------------------------
@@ -67,6 +72,7 @@ void ofApp::update() {
 	topbar.update();
 	elements.update();
 	cam.update();
+	propertiesScreen.update();
 }
 
 //--------------------------------------------------------------
@@ -75,25 +81,29 @@ void ofApp::draw() {
 	{
 	case PresentMode::Gallery:
 		elements.draw();
-		topbar.draw();
 		break;
 	case PresentMode::ViewItem:
 		if (elements.getSelectedIndex() != -1)
 		{
-			elements[elements.getSelectedIndex()]->draw(0, 0, width, height);
+			elements[elements.getSelectedIndex()]->draw(0, TOPBAR_HEIGHT, width, height - TOPBAR_HEIGHT);
 		}
 		break;
 	case PresentMode::Camera:
 		cam.draw();
 		break;
+	case PresentMode::ItemProperties:
+		propertiesScreen.draw();
+		break;
 	default:
 		break;
 	}
+	topbar.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 	elements.onKeyPressed(key);
+	updateFileProperties();
 	switch (key) {
 	case OF_KEY_RETURN: //return = enter
 		if (currentView == PresentMode::ViewItem)
@@ -140,6 +150,7 @@ void ofApp::mousePressed(int x, int y, int button){
 	if (!topbar.onClick(x, y, button))
 	{
 		elements.onClick(x, y, button);
+		updateFileProperties();
 	}
 }
 
@@ -179,4 +190,15 @@ void ofApp::mouseScrolled(int x, int y, float scrollX, float scrollY){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
 
+}
+
+
+
+void ofApp::updateFileProperties()
+{
+	if (elements.getSelectedIndex() != -1)
+	{
+		Text* t = (Text*)propertiesScreen[0];
+		t->setText(explorer[elements.getSelectedIndex()].getPropertyString());
+	}
 }
