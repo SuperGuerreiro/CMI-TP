@@ -6,7 +6,7 @@ class Dropdown : public ScreenElement
 {
 public:
 	Dropdown();
-	Dropdown(int xOffset, int yOffset, int width, int height, std::string name, ofColor color);
+	Dropdown(int xOffset, int yOffset, int width, int height, std::string name, ofColor color, ofColor bgColor);
 	~Dropdown();
 
 	void update() override;
@@ -24,6 +24,7 @@ public:
 
 	void addElement(ScreenElement* element, int length);
 	inline ScreenElement* operator[](int i) const { return elements[i]; };
+	inline void updateName(std::string name) { this->name = name; };
 
 
 private:
@@ -33,6 +34,7 @@ private:
 	int height;
 	std::string name;
 	ofColor color;
+	ofColor bgColor;
 
 	int maxElementWidth = 0;
 	int totalHeight = 0;

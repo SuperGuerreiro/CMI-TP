@@ -20,7 +20,7 @@ void ofApp::setup(){
 
 	cam.setup(320, 240);
 
-	Dropdown* td = new Dropdown(0, 0, 0, 0, "File", ofColor::white);
+	Dropdown* td = new Dropdown(0, 0, 0, 0, "File", ofColor::white, ofColor::cornflowerBlue);
 	Button* tb = new Button(0, 0, 0, 0, "Browse", ofColor::black, [this] { currentView = PresentMode::Gallery; });
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	tb = new Button(0, 0, 0, 0, "Display", ofColor::black, [this] { currentView = PresentMode::ViewItem; });
@@ -66,6 +66,20 @@ void ofApp::setup(){
 	}
 
 	propertiesScreen.add(new Text("THIS IS A TEXT\nA REALLY BIG TEXT\nNOW TELL ME WHAT YOU WANT\nWHAT YOU REALLY REALLY WANT", ofColor::black, 0 + 10, TOPBAR_HEIGHT + 10));
+	propertiesScreen.add(new Text("Tags:\n - Viewers:\n - tag_1:\n - tag_2:\n - tag_3:\n - tag_4:\n - tag_5:\n - tag_6:\n - tag_7:", ofColor::black, 0, 0));
+	Dropdown* dd = new Dropdown(0, 0, 0, 0, "0", ofColor::white, ofColor::cornflowerBlue);
+	Button* b = new Button(0, 0, 0, 0, "Any", ofColor::black, [] {});
+	dd->addElement(b, b->getName().length() * CHAR_WIDTH);
+	Button* b = new Button(0, 0, 0, 0, "0", ofColor::black, [] {});
+	dd->addElement(b, b->getName().length() * CHAR_WIDTH);
+	Button* b = new Button(0, 0, 0, 0, "1", ofColor::black, [] {});
+	dd->addElement(b, b->getName().length() * CHAR_WIDTH);
+	Button* b = new Button(0, 0, 0, 0, "2", ofColor::black, [] {});
+	dd->addElement(b, b->getName().length() * CHAR_WIDTH);
+	Button* b = new Button(0, 0, 0, 0, "3", ofColor::black, [] {});
+	dd->addElement(b, b->getName().length() * CHAR_WIDTH);
+	propertiesScreen.add(dd);
+	//ofSystemTextBoxDialog();
 }
 
 //--------------------------------------------------------------
@@ -150,8 +164,17 @@ void ofApp::mouseDragged(int x, int y, int button){
 void ofApp::mousePressed(int x, int y, int button){
 	if (!topbar.onClick(x, y, button))
 	{
-		elements.onClick(x, y, button);
-		updateFileProperties();
+		switch (currentView)
+		{
+		case PresentMode::Gallery:
+			elements.onClick(x, y, button);
+			updateFileProperties();
+			break;
+		case PresentMode::ItemProperties:
+			propertiesScreen.onClick(x, y, button);
+		default:
+			break;
+		}
 	}
 }
 
@@ -176,6 +199,9 @@ void ofApp::windowResized(int w, int h){
 	height = h;
 	topbar.setSize(w, TOPBAR_HEIGHT);
 	elements.setSize(w, h - TOPBAR_HEIGHT);
+	propertiesScreen[1]->setOffset(10, height / 2);
+	propertiesScreen[2]->setOffset(10 + CHAR_WIDTH * 12, height / 2 + (15 * 1));
+	propertiesScreen[2]->setSize(CHAR_WIDTH * 4, CHAR_HEIGHT);
 }
 
 //--------------------------------------------------------------
