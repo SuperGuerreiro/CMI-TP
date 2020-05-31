@@ -54,7 +54,47 @@ Item::Item(Image* image)
 
 Item::Item(Video* video)
 {
+	name = video->getName();
+	if (XML.loadFile(name + ".xml"))
+	{
+		printf("%s_settings.xml loaded \n", name);
 
+		//TODO: load the values
+	}
+	else
+	{
+		int width = video->getOFHandle().getWidth();
+		int height = video->getOFHandle().getHeight();
+
+		XML.setValue("settings:name", name);
+		XML.setValue("settings:width", width);
+		XML.setValue("settings:height", height);
+
+		for (int j = 0; j < width; j++)
+		{
+			for (int k = 0; k < height; k++)
+			{
+				
+				ofColor currPixel = video->getOFHandle().getPixels().getColor(j, k);
+
+				lightness += currPixel.getLightness();
+				brightness += currPixel.getBrightness();
+				hue += currPixel.getHue();
+			}
+		}
+		int vidSize = width * height;
+		lightness = lightness / vidSize;
+		brightness = brightness / vidSize;
+		hue = hue / vidSize;
+
+		XML.setValue("settings:lightness", lightness);
+		XML.setValue("settings:brightness", brightness);
+		XML.setValue("settings:hue", hue);
+
+		XML.setValue("Tags:rabo", "rabo");
+		XML.setValue("Tags:aaa", "as");
+		saveXML();
+	}
 }
 
 Item::~Item()

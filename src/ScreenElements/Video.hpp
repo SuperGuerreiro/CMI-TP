@@ -16,6 +16,11 @@ public:
 	void setSize(int width, int height) override;
 	void setFillMode(bool fill) override;
 
+	void drawThumbnail(int frame);
+	void generateThumbnailFrames();
+	void setFullScreen(bool bFullScreen);
+
+
 	bool onClick(int x, int y, int button) override;
 
 	const inline ElementType getType() const override { return ElementType::Video; };
@@ -30,9 +35,18 @@ private:
 	int yOffset;
 	int width;
 	int height;
+	int currThumb;
+	
+	int currTime;
+	const unsigned int INTERVAL_TIME = 10;
+
+
 	bool fillMode;
+	bool isFullScreen;
 
 	std::string name;
+	std::vector<ofImage> thumbnail;
+	std::vector<int> thumbnailFrames;
 	ofVideoPlayer self;
 	int id = -1;
 };

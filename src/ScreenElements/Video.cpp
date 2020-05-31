@@ -10,13 +10,43 @@ Video::Video(std::string pathname, int xOffset, int yOffset, int width, int heig
 
 	self.setLoopState(OF_LOOP_NORMAL);
 	//self.firstFrame();
-	self.play();
+	//self.play();
+	generateThumbnailFrames();
+
+	isFullScreen = false;
+	//drawThumbnail();
+	//saveFrame(self.getCurrentFrame())
 	fillMode = false;
+	currTime = 0;
+	currThumb = 0;
+	
 }
 
 void Video::update()
 {
-	self.update();
+	//self.update();
+
+	currTime++;
+
+	//If in fullScreen, plays video
+	if (isFullScreen) {
+		self.play();
+		self.setPaused(false);
+		self.update();
+	}
+	else {
+		//Gallery Mode: Shows Thumbnails
+		
+		//Shows currThumbnail for a given time frame
+		if (currTime > INTERVAL_TIME) {
+			drawThumbnail(thumbnailFrames[currThumb++]);
+			if (currThumb == thumbnailFrames.size()) {
+				currThumb = 0;
+			}
+			currTime = 0;
+		}
+	}
+
 }
 
 void Video::draw()
@@ -76,10 +106,12 @@ void Video::draw()
 
 void Video::draw(int xOffset, int yOffset, int width, int height)
 {
+
 	ofSetColor(ofColor::white);
 	if (fillMode)
 	{
 		self.draw(xOffset, yOffset, width, height);
+
 	}
 	else
 	{
@@ -146,4 +178,59 @@ void Video::setFillMode(bool fill)
 bool Video::onClick(int x, int y, int button)
 {
 	return x >= xOffset && x <= xOffset + width && y >= yOffset && y <= yOffset + height;
+}
+
+void Video::drawThumbnail(int frame) {
+
+	self.setPaused(false);
+	self.setFrame(frame);
+	self.setPaused(true);
+	self.update();
+	/*while (!self.isFrameNew() && frame < self.getTotalNumFrames() - 1) {
+		self.update();
+	}
+	*/
+	/*
+	for (int i = 0; i < 10; i++) {
+		self.setFrame(frame);
+
+		ofImage curr;
+		curr.setFromPixels(self.getPixels());
+		curr.save(i+"screenshot.jpg");
+		thumbnail.push_back(curr);
+
+		frame += totalFrames / 10;
+	}
+
+
+	/*
+	while (frame < totalFrames) {
+		printf("Frame: %d", frame);
+		self.setPaused(false);
+		self.setFrame(frame);
+		
+		self.setPaused(true);
+		self.update();
+		
+		frame += totalFrames / 10;
+
+		if (frame >= (totalFrames / 10) * 8)
+			frame = 0;
+	}
+	*/
+}
+
+void Video::generateThumbnailFrames() {
+	int totalFrames = self.getTotalNumFrames();
+	int frame = 1;
+
+	for (int i = 0; i < 10; i++) {
+		thumbnailFrames.push_back(frame);
+		frame += totalFrames / 10;
+	}
+}
+
+void Video::setFullScreen(bool bFullScreen) {
+	isFullScreen = bFullScreen;
+	self.firstFrame();
 }
