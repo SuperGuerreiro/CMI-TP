@@ -22,7 +22,7 @@ public:
 
 	bool onClick(int x, int y, int button) override;
 
-	const inline ElementType getType() const override { return ElementType::TopBar; };
+	const inline ElementType getType() const override { return ElementType::Camera; };
 	const inline std::string getName() const override { return ""; };
 
 

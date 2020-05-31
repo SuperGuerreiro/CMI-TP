@@ -99,10 +99,22 @@ void ofApp::keyPressed(int key) {
 		if (currentView == PresentMode::ViewItem)
 		{
 			currentView = PresentMode::Gallery;
+			
+			//If user is in gallery, video shows thumbnail
+			if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video) {
+				Video* tmp = (Video*)elements[elements.getSelectedIndex()];
+				tmp->setFullScreen(false);
+			}
 		}
 		else
 		{
 			currentView = PresentMode::ViewItem;
+
+			//If user chooses fullscreen mode, video starts playing
+			if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video) {
+				Video* tmp = (Video*)elements[elements.getSelectedIndex()];
+				tmp->setFullScreen(true);
+			}
 		}
 		break;
 	}
