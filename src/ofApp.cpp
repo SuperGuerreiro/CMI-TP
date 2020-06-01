@@ -38,6 +38,7 @@ void ofApp::setup(){
 	dir.allowExt("png");
 	//dir.allowExt("gif");
 	dir.allowExt("mov");
+	dir.allowExt("mp4");
 
 	dir.sort();
 	int index = -1;
@@ -54,7 +55,7 @@ void ofApp::setup(){
 				explorer.add(t);
 				index++;
 			}
-			else if (ext == ".mov")
+			else if (ext == ".mov" || ext == ".mp4")
 			{
 				Video* t = new Video(pathname, 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT);
 				elements.add(t);

@@ -19,6 +19,7 @@ public:
 	void drawThumbnail(int frame);
 	void generateThumbnailFrames();
 	void setFullScreen(bool bFullScreen);
+	float getRuntime();
 
 
 	bool onClick(int x, int y, int button) override;
@@ -38,7 +39,7 @@ private:
 	int currThumb;
 	
 	int currTime;
-	const unsigned int INTERVAL_TIME = 10;
+	const unsigned int INTERVAL_TIME = 7;
 
 
 	bool fillMode;
