@@ -19,6 +19,7 @@ void ofApp::setup(){
 	elements.setOffset(0, TOPBAR_HEIGHT);
 
 	cam.setup(320, 240);
+	cam.setOffset(10, 10 + TOPBAR_HEIGHT);
 
 	Dropdown* td = new Dropdown(0, 0, 0, 0, "File", ofColor::white, ofColor::cornflowerBlue);
 	Button* tb = new Button(0, 0, 0, 0, "Browse", ofColor::black, ofColor::lightGray, [this] { currentView = PresentMode::Gallery; });
@@ -39,6 +40,7 @@ void ofApp::setup(){
 	//dir.allowExt("gif");
 	dir.allowExt("mov");
 	dir.allowExt("mp4");
+	dir.allowExt("webm");
 
 	dir.sort();
 	int index = -1;
@@ -55,7 +57,7 @@ void ofApp::setup(){
 				explorer.add(t);
 				index++;
 			}
-			else if (ext == ".mov" || ext == ".mp4")
+			else if (ext == ".mov" || ext == ".mp4" || ext == ".webm")
 			{
 				Video* t = new Video(pathname, 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT);
 				elements.add(t);
@@ -85,9 +87,28 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update() {
 	topbar.update();
-	elements.update();
-	cam.update();
-	propertiesScreen.update();
+	switch (currentView)
+	{
+	case PresentMode::Gallery:
+		elements.update();
+		break;
+	case PresentMode::ViewItem:
+		elements[elements.getSelectedIndex()]->update();
+		break;
+	case PresentMode::ItemProperties:
+		propertiesScreen.update();
+		elements[elements.getSelectedIndex()]->update();
+		break;
+	case PresentMode::Camera:
+		cam.update();
+		break;
+	case PresentMode::Showcase:
+		cam.update();
+
+		break;
+	default:
+		break;
+	}
 	videoTransition();
 }
 

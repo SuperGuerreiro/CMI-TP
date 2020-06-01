@@ -36,4 +36,8 @@ private:
 	std::string name;
 	ofImage self;
 	int id = -1;
+
+
+	int nXOffset, nYOffset, nWidth, nHeight;
+	void updateDrawValues();
 };

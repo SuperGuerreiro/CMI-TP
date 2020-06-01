@@ -16,7 +16,8 @@ enum class PresentMode
 	Gallery,
 	ViewItem,
 	Camera,
-	ItemProperties
+	ItemProperties,
+	Showcase
 };
 
 class ofApp : public ofBaseApp{

@@ -19,7 +19,7 @@ Video::Video(std::string pathname, int xOffset, int yOffset, int width, int heig
 	fillMode = false;
 	currTime = 0;
 	currThumb = 0;
-	
+	updateDrawValues();
 }
 
 void Video::update()
@@ -30,8 +30,8 @@ void Video::update()
 
 	//If in fullScreen, plays video
 	if (isFullScreen) {
-		self.play();
-		self.setPaused(false);
+		//self.play();
+		//self.setPaused(false);
 		self.update();
 	}
 	else {
@@ -52,9 +52,6 @@ void Video::update()
 
 void Video::draw()
 {
-	//ofSetColor(ofColor::black);							//These 2 lines draw a black rectangle behind the element for placement purposes only
-	//ofDrawRectangle(xOffset, yOffset, width, height);	//TODO: remove in the final build
-
 	ofSetColor(ofColor::white);
 	if (fillMode)
 	{
@@ -62,46 +59,12 @@ void Video::draw()
 	}
 	else
 	{
-		size_t x = self.getPixels().getWidth();
-		size_t y = self.getPixels().getHeight();
-		float sourceAR = (float)x / y;
-		float displayAR = (float)width / height;
-		int nWidth = width;
-		int nHeight = height;
-		if (y < nHeight)
-		{
-			nHeight = y;
-			nWidth = x;
-			if (width < nWidth)
-			{
-				float ratio = (float)width / nWidth;
-				nWidth = width;
-				nHeight = ratio * nHeight;
-			}
-		}
-		else if (x < nWidth)
-		{
-			nHeight = y;
-			nWidth = x;
-			if (height < nHeight)
-			{
-				float ratio = (float)height / nHeight;
-				nHeight = height;
-				nWidth = ratio * nWidth;
-			}
-		}
-		else
-		{
-			if (sourceAR < displayAR)
-			{
-				nWidth = height * sourceAR;
-			}
-			else
-			{
-				nHeight = width / sourceAR;
-			}
-		}
-		self.draw(xOffset + ((width - nWidth) * 0.5), yOffset + ((height - nHeight) * 0.5), nWidth, nHeight);
+		self.draw(nXOffset, nYOffset, nWidth, nHeight);
+	}
+	if (!isFullScreen)
+	{
+		ofSetColor(ofColor::black);
+		ofDrawTriangle(v1, v2, v3);
 	}
 }
 
@@ -163,12 +126,14 @@ void Video::setOffset(int xOffset, int yOffset)
 {
 	this->xOffset = xOffset;
 	this->yOffset = yOffset;
+	updateDrawValues();
 }
 
 void Video::setSize(int width, int height)
 {
 	this->width = width;
 	this->height = height;
+	updateDrawValues();
 }
 
 void Video::setFillMode(bool fill)
@@ -179,6 +144,61 @@ void Video::setFillMode(bool fill)
 bool Video::onClick(int x, int y, int button)
 {
 	return x >= xOffset && x <= xOffset + width && y >= yOffset && y <= yOffset + height;
+}
+
+void Video::updateDrawValues()
+{
+	size_t x = self.getPixels().getWidth();
+	size_t y = self.getPixels().getHeight();
+	float sourceAR = (float)x / y;
+	float displayAR = (float)width / height;
+	int nWidth = width;
+	int nHeight = height;
+	if (y < nHeight)
+	{
+		nHeight = y;
+		nWidth = x;
+		if (width < nWidth)
+		{
+			float ratio = (float)width / nWidth;
+			nWidth = width;
+			nHeight = ratio * nHeight;
+		}
+	}
+	else if (x < nWidth)
+	{
+		nHeight = y;
+		nWidth = x;
+		if (height < nHeight)
+		{
+			float ratio = (float)height / nHeight;
+			nHeight = height;
+			nWidth = ratio * nWidth;
+		}
+	}
+	else
+	{
+		if (sourceAR < displayAR)
+		{
+			nWidth = height * sourceAR;
+		}
+		else
+		{
+			nHeight = width / sourceAR;
+		}
+	}
+	this->nWidth = nWidth;
+	this->nHeight = nHeight;
+	this->nXOffset = xOffset + ((width - nWidth) * 0.5);
+	this->nYOffset = yOffset + ((height - nHeight) * 0.5);
+	
+	int tWidth = width / 4;
+	int tHeight = height / 5;
+	int hPadding = (width - tWidth) / 2;
+	int vPadding = (height - tHeight) / 2;
+	v1 = glm::vec2(xOffset + hPadding, yOffset + vPadding);
+	v2 = glm::vec2(xOffset + hPadding + tWidth, yOffset + vPadding + tHeight / 2);
+	v3 = glm::vec2(xOffset + hPadding, yOffset + vPadding + tHeight);
 }
 
 void Video::drawThumbnail(int frame) {
@@ -234,6 +254,11 @@ void Video::generateThumbnailFrames() {
 void Video::setFullScreen(bool bFullScreen) {
 	isFullScreen = bFullScreen;
 	self.firstFrame();
+	if (bFullScreen)
+	{
+		self.play();
+		self.setPaused(false);
+	}
 }
 
 float Video::getRuntime() {

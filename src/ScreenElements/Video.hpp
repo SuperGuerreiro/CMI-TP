@@ -50,4 +50,9 @@ private:
 	std::vector<int> thumbnailFrames;
 	ofVideoPlayer self;
 	int id = -1;
+
+
+	int nXOffset, nYOffset, nWidth, nHeight;
+	glm::vec2 v1, v2, v3;
+	void updateDrawValues();
 };
