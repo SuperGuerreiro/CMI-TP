@@ -5,8 +5,8 @@ Button::Button()
 
 }
 
-Button::Button(int xOffset, int yOffset, int width, int height, std::string name, ofColor color, SimpleCallback callback)
-	: xOffset(xOffset), yOffset(yOffset), width(width), height(height), name(name), color(color), callback(callback)
+Button::Button(int xOffset, int yOffset, int width, int height, std::string name, ofColor color, ofColor bgColor, SimpleCallback callback)
+	: xOffset(xOffset), yOffset(yOffset), width(width), height(height), name(name), color(color), bgColor(bgColor), callback(callback)
 {
 
 }
@@ -23,13 +23,18 @@ void Button::update()
 
 void Button::draw()
 {
+	ofSetColor(bgColor);
+	ofDrawRectangle(xOffset, yOffset, width, height);
 	ofSetColor(color);
 	ofDrawBitmapString(name, xOffset + (width - name.length() * CHAR_WIDTH) / 2, yOffset + CHAR_HEIGHT + (height - CHAR_HEIGHT) / 2);
 }
 
 void Button::draw(int xOffset, int yOffset, int width, int height)
 {
-
+	ofSetColor(bgColor);
+	ofDrawRectangle(xOffset, yOffset, width, height);
+	ofSetColor(color);
+	ofDrawBitmapString(name, xOffset + (width - name.length() * CHAR_WIDTH) / 2, yOffset + CHAR_HEIGHT + (height - CHAR_HEIGHT) / 2);
 }
 
 void Button::setOffset(int xOffset, int yOffset)

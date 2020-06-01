@@ -11,7 +11,10 @@ public:
 	Item(Video* video);
 	~Item();
 
+	void addTag(std::string tag);
+	void removeTag(std::string tag);
 	std::string getPropertyString() const;
+	inline const std::vector<std::string>& getTags() { return tags; };
 	void saveXML();
 
 private:
@@ -22,7 +25,7 @@ private:
 	float brightness = 0;
 	float hue = 0;
 
-	int viewers = 0;
+	std::vector<std::string> tags;
 
 	ofxXmlSettings XML;
 

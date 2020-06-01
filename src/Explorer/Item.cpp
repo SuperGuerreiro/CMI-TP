@@ -102,6 +102,32 @@ Item::~Item()
 
 }
 
+void Item::addTag(std::string tag)
+{
+	for each (std::string t in tags)
+	{
+		if (t == tag)
+		{
+			return;
+		}
+	}
+	tags.push_back(tag);
+	printf("Added %s to %s\n", tag.c_str(), name.c_str());
+}
+
+void Item::removeTag(std::string tag)
+{
+	for (int i = 0; i < tags.size(); i++)
+	{
+		if (tags[i] == tag)
+		{
+			printf("Removed %s from %s\n", tag.c_str(), name.c_str());
+			tags.erase(tags.begin() + i);
+			return;
+		}
+	}
+}
+
 std::string Item::getPropertyString() const
 {
 	char additional[512];
@@ -118,4 +144,5 @@ void Item::saveXML()
 {
 	printf("%s.xml saved \n", name.c_str());
 	XML.saveFile(name + ".xml");
+	//TODO: save tags to xml
 }

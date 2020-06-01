@@ -21,16 +21,16 @@ void ofApp::setup(){
 	cam.setup(320, 240);
 
 	Dropdown* td = new Dropdown(0, 0, 0, 0, "File", ofColor::white, ofColor::cornflowerBlue);
-	Button* tb = new Button(0, 0, 0, 0, "Browse", ofColor::black, [this] { currentView = PresentMode::Gallery; });
+	Button* tb = new Button(0, 0, 0, 0, "Browse", ofColor::black, ofColor::lightGray, [this] { currentView = PresentMode::Gallery; });
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
-	tb = new Button(0, 0, 0, 0, "Display", ofColor::black, [this] { currentView = PresentMode::ViewItem; });
+	tb = new Button(0, 0, 0, 0, "Display", ofColor::black, ofColor::lightGray, [this] { currentView = PresentMode::ViewItem; });
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
-	tb = new Button(0, 0, 0, 0, "Properties", ofColor::black, [this] { currentView = PresentMode::ItemProperties; });
+	tb = new Button(0, 0, 0, 0, "Properties", ofColor::black, ofColor::lightGray, [this] { currentView = PresentMode::ItemProperties; });
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
-	tb = new Button(0, 0, 0, 0, "Presentation Mode", ofColor::white, [this] {  });
+	tb = new Button(0, 0, 0, 0, "Presentation Mode", ofColor::white, ofColor::cornflowerBlue, [this] {  });
 	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
-	tb = new Button(0, 0, 0, 0, "CamMode", ofColor::white, [this] { currentView = PresentMode::Camera; });
+	tb = new Button(0, 0, 0, 0, "CamMode", ofColor::white, ofColor::cornflowerBlue, [this] { currentView = PresentMode::Camera; });
 	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
 
 	dir.listDir(DIRECTORY);
@@ -65,20 +65,17 @@ void ofApp::setup(){
 	}
 
 	propertiesScreen.add(new Text("THIS IS A TEXT\nA REALLY BIG TEXT\nNOW TELL ME WHAT YOU WANT\nWHAT YOU REALLY REALLY WANT", ofColor::black, 0 + 10, TOPBAR_HEIGHT + 10));
-	propertiesScreen.add(new Text("Tags:\n - Viewers:\n - tag_1:\n - tag_2:\n - tag_3:\n - tag_4:\n - tag_5:\n - tag_6:\n - tag_7:", ofColor::black, 0, 0));
-	Dropdown* dd = new Dropdown(0, 0, 0, 0, "0", ofColor::white, ofColor::cornflowerBlue);
-	Button* b = new Button(0, 0, 0, 0, "Any", ofColor::black, [] {});
-	dd->addElement(b, b->getName().length() * CHAR_WIDTH);
-	Button* b = new Button(0, 0, 0, 0, "0", ofColor::black, [] {});
-	dd->addElement(b, b->getName().length() * CHAR_WIDTH);
-	Button* b = new Button(0, 0, 0, 0, "1", ofColor::black, [] {});
-	dd->addElement(b, b->getName().length() * CHAR_WIDTH);
-	Button* b = new Button(0, 0, 0, 0, "2", ofColor::black, [] {});
-	dd->addElement(b, b->getName().length() * CHAR_WIDTH);
-	Button* b = new Button(0, 0, 0, 0, "3", ofColor::black, [] {});
-	dd->addElement(b, b->getName().length() * CHAR_WIDTH);
-	propertiesScreen.add(dd);
-	//ofSystemTextBoxDialog();
+	propertiesScreen.add(new Text("Tags:", ofColor::black, 0, 0));
+	propertiesScreen.add(new Button(0, 0, 12 + (7 * CHAR_WIDTH), 12 + CHAR_HEIGHT, "Add Tag", ofColor::white, ofColor::cornflowerBlue, [this]
+	{
+		std::string tag = ofSystemTextBoxDialog("New Tag", "");
+		if (tag != "")
+		{
+			explorer[elements.getSelectedIndex()]->addTag(tag);
+			updateFileProperties();
+		}
+	}));
+	propertiesScreen.add(new Group());
 }
 
 //--------------------------------------------------------------
@@ -107,6 +104,10 @@ void ofApp::draw() {
 		break;
 	case PresentMode::ItemProperties:
 		propertiesScreen.draw();
+		if (elements.getSelectedIndex() != -1)
+		{
+			elements[elements.getSelectedIndex()]->draw(width - ELEMENT_WIDTH - 10, TOPBAR_HEIGHT + 10, ELEMENT_WIDTH, ELEMENT_HEIGHT);
+		}
 		break;
 	default:
 		break;
@@ -198,9 +199,7 @@ void ofApp::windowResized(int w, int h){
 	height = h;
 	topbar.setSize(w, TOPBAR_HEIGHT);
 	elements.setSize(w, h - TOPBAR_HEIGHT);
-	propertiesScreen[1]->setOffset(10, height / 2);
-	propertiesScreen[2]->setOffset(10 + CHAR_WIDTH * 12, height / 2 + (15 * 1));
-	propertiesScreen[2]->setSize(CHAR_WIDTH * 4, CHAR_HEIGHT);
+	resizeFileProperties();
 }
 
 //--------------------------------------------------------------
@@ -222,9 +221,47 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 void ofApp::updateFileProperties()
 {
-	if (elements.getSelectedIndex() != -1)
+	Group* g = (Group*)propertiesScreen[3];
+	g->clear();
+	Text* t = (Text*)propertiesScreen[0];
+	int index = elements.getSelectedIndex();
+	if (index != -1)
 	{
-		Text* t = (Text*)propertiesScreen[0];
-		t->setText(explorer[elements.getSelectedIndex()].getPropertyString());
+		Item* cur = explorer[index];
+		t->setText(cur->getPropertyString());
+		std::vector<std::string> tags = cur->getTags();
+		for each (std::string tag in tags)
+		{
+			g->add(new Button(0, 0, 12 + (tag.length() * CHAR_WIDTH), 12 + CHAR_HEIGHT, tag, ofColor::white, ofColor::red, [this, cur, tag]
+			{
+				cur->removeTag(tag);
+				updateFileProperties();
+			}));
+		}
+		resizeFileProperties();
+	}
+	else
+	{
+		t->setText("No file selected.");
+	}
+}
+
+void ofApp::resizeFileProperties()
+{
+	propertiesScreen[1]->setOffset(10, height / 2);
+	propertiesScreen[2]->setOffset(10, height - 22 - CHAR_HEIGHT);
+	Group* g = (Group*)propertiesScreen[3];
+	int nTags = g->getNumElements();
+	int x = 10;
+	int y = height / 2 + 20;
+	for (int i = 0; i < nTags; i++)
+	{
+		(*g)[i]->setOffset(x, y);
+		x += (*g)[i]->getName().length() * CHAR_WIDTH + 22;
+		if (x > width / 2)
+		{
+			x = 10;
+			y += 32;
+		}
 	}
 }

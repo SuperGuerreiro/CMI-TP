@@ -54,4 +54,5 @@ private:
 
 
 		void updateFileProperties();
+		void resizeFileProperties();
 };

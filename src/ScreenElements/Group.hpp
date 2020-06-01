@@ -22,7 +22,16 @@ public:
 	const inline std::string getName() const override { return ""; };
 
 	inline void add(ScreenElement* e) { elements.push_back(e); };
+	inline void clear()
+	{
+		for each (ScreenElement* e in elements)
+		{
+			delete e;
+		}
+		elements.clear();
+	};
 	inline ScreenElement* operator[](int i) const { return elements[i]; };
+	inline int getNumElements() { return elements.size(); };
 
 private:
 	std::vector<ScreenElement*> elements;

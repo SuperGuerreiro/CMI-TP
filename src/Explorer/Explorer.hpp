@@ -14,7 +14,7 @@ public:
 	void add(Image* imageHandle);
 	void add(Video* videoHandle);
 
-	inline const Item& operator[](int i) const { return items[i]; };
+	inline Item* operator[](int i) { return &items[i]; };
 
 private:
 	std::vector<Item> items;

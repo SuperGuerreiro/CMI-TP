@@ -6,7 +6,7 @@ class Button : public ScreenElement
 {
 public:
 	Button();
-	Button(int xOffset, int yOffset, int width, int height, std::string name, ofColor color, SimpleCallback callback);
+	Button(int xOffset, int yOffset, int width, int height, std::string name, ofColor color, ofColor bgColor, SimpleCallback callback);
 	~Button();
 
 	void update() override;
@@ -30,6 +30,7 @@ private:
 	int height;
 	std::string name;
 	ofColor color;
+	ofColor bgColor;
 
 	SimpleCallback callback;
 };
