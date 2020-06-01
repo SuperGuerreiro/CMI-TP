@@ -27,6 +27,4 @@ private:
 
 	std::vector<std::string> tags;
 
-	ofxXmlSettings XML;
-
 };

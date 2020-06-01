@@ -3,6 +3,7 @@
 Item::Item(Image* image)
 {
 	name = image->getName();
+	ofxXmlSettings XML;
 	if (XML.loadFile(name + ".xml"))
 	{
 		printf("%s.xml loaded \n", name.c_str());
@@ -15,15 +16,13 @@ Item::Item(Image* image)
 		lightness = XML.getValue("settings:lightness", 0.);
 		brightness = XML.getValue("settings:brightness", 0.);
 		hue = XML.getValue("settings:hue", 0.);
+
+		XML.getAttributeNames("Tags", tags);
 	}
 	else
 	{
 		width = image->getOFHandle().getWidth();
 		height = image->getOFHandle().getHeight();
-
-		XML.setValue("settings:name", name);
-		XML.setValue("settings:width", width);
-		XML.setValue("settings:height", height);
 
 		for (int j = 0; j < width; j++)
 		{
@@ -42,18 +41,13 @@ Item::Item(Image* image)
 		brightness = brightness / imgSize;
 		hue = hue / imgSize;
 
-		XML.setValue("settings:lightness", lightness);
-		XML.setValue("settings:brightness", brightness);
-		XML.setValue("settings:hue", hue);
-
-		XML.setValue("Tags:rabo", "rabo");
-		XML.setValue("Tags:aaa", "as");
 		saveXML();
 	}
 }
 
 Item::Item(Video* video)
 {
+	ofxXmlSettings XML;
 	name = video->getName();
 	if (XML.loadFile(name + ".xml"))
 	{
@@ -63,12 +57,8 @@ Item::Item(Video* video)
 	}
 	else
 	{
-		int width = video->getOFHandle().getWidth();
-		int height = video->getOFHandle().getHeight();
-
-		XML.setValue("settings:name", name);
-		XML.setValue("settings:width", width);
-		XML.setValue("settings:height", height);
+		width = video->getOFHandle().getWidth();
+		height = video->getOFHandle().getHeight();
 
 		for (int j = 0; j < width; j++)
 		{
@@ -87,13 +77,8 @@ Item::Item(Video* video)
 		brightness = brightness / vidSize;
 		hue = hue / vidSize;
 
-		XML.setValue("settings:lightness", lightness);
-		XML.setValue("settings:brightness", brightness);
-		XML.setValue("settings:hue", hue);
 		XML.setValue("settings:runtime", video->getRuntime()); //in seconds
 
-		XML.setValue("Tags:rabo", "rabo");
-		XML.setValue("Tags:aaa", "as");
 		saveXML();
 	}
 }
@@ -114,6 +99,7 @@ void Item::addTag(std::string tag)
 	}
 	tags.push_back(tag);
 	printf("Added %s to %s\n", tag.c_str(), name.c_str());
+	saveXML();
 }
 
 void Item::removeTag(std::string tag)
@@ -124,6 +110,7 @@ void Item::removeTag(std::string tag)
 		{
 			printf("Removed %s from %s\n", tag.c_str(), name.c_str());
 			tags.erase(tags.begin() + i);
+			saveXML();
 			return;
 		}
 	}
@@ -143,7 +130,19 @@ std::string Item::getPropertyString() const
 
 void Item::saveXML()
 {
+	ofxXmlSettings XML;
+	XML.setValue("settings:name", name);
+	XML.setValue("settings:width", width);
+	XML.setValue("settings:height", height);
+	XML.setValue("settings:lightness", lightness);
+	XML.setValue("settings:brightness", brightness);
+	XML.setValue("settings:hue", hue);
+	XML.addTag("Tags");
+
 	printf("%s.xml saved \n", name.c_str());
+	for each (std::string tag in tags)
+	{
+		XML.addAttribute("Tags", tag, 0, 0);
+	}
 	XML.saveFile(name + ".xml");
-	//TODO: save tags to xml
 }
