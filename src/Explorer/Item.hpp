@@ -25,6 +25,8 @@ private:
 	float brightness = 0;
 	float hue = 0;
 
+	float runtime = -1.;
+
 	std::vector<std::string> tags;
 
 };

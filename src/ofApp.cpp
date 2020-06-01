@@ -75,14 +75,11 @@ void ofApp::setup(){
 			if (tag != "")
 			{
 				explorer[elements.getSelectedIndex()]->addTag(tag);
-				//explorer.addTag(elements.getSelectedIndex(), tag);
 				updateFileProperties();
 			}
 		}
 	}));
 	propertiesScreen.add(new Group());
-	//explorer[0]->addTag("xisde");
-	//explorer.addTag(0, "EXXDEEEE");
 }
 
 //--------------------------------------------------------------
@@ -91,6 +88,7 @@ void ofApp::update() {
 	elements.update();
 	cam.update();
 	propertiesScreen.update();
+	videoTransition();
 }
 
 //--------------------------------------------------------------
@@ -131,22 +129,10 @@ void ofApp::keyPressed(int key) {
 		if (currentView == PresentMode::ViewItem)
 		{
 			currentView = PresentMode::Gallery;
-			
-			//If user is in gallery, video shows thumbnail
-			if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video) {
-				Video* tmp = (Video*)elements[elements.getSelectedIndex()];
-				tmp->setFullScreen(false);
-			}
 		}
 		else
 		{
 			currentView = PresentMode::ViewItem;
-
-			//If user chooses fullscreen mode, video starts playing
-			if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video) {
-				Video* tmp = (Video*)elements[elements.getSelectedIndex()];
-				tmp->setFullScreen(true);
-			}
 		}
 		break;
 	}
@@ -225,6 +211,37 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 
+
+void ofApp::videoTransition()
+{
+	if (elements.getSelectedIndex() != -1)
+	{
+		if (currentView != lastView)
+		{
+			if (currentView == PresentMode::ViewItem && elements[elements.getSelectedIndex()]->getType() == ElementType::Video)
+			{
+				((Video*)elements[elements.getSelectedIndex()])->setFullScreen(true);
+			}
+			else if (lastView == PresentMode::ViewItem && elements[elements.getSelectedIndex()]->getType() == ElementType::Video)
+			{
+				((Video*)elements[elements.getSelectedIndex()])->setFullScreen(false);
+			}
+			lastView = currentView;
+		}
+		if (lastElement != elements.getSelectedIndex() && currentView == PresentMode::ViewItem)
+		{
+			if (lastElement != -1 && elements[lastElement]->getType() == ElementType::Video)
+			{
+				((Video*)elements[lastElement])->setFullScreen(false);
+			}
+			if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video)
+			{
+				((Video*)elements[elements.getSelectedIndex()])->setFullScreen(true);
+			}
+			lastElement = elements.getSelectedIndex();
+		}
+	}
+}
 
 void ofApp::updateFileProperties()
 {

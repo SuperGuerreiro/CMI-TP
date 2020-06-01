@@ -52,7 +52,10 @@ private:
 		Group propertiesScreen;
 		int width, height;
 
+		int lastElement = -1;
+		PresentMode lastView = PresentMode::None;
 
+		void videoTransition();
 		void updateFileProperties();
 		void resizeFileProperties();
 };

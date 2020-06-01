@@ -53,7 +53,18 @@ Item::Item(Video* video)
 	{
 		printf("%s_settings.xml loaded \n", name);
 
-		//TODO: load the values
+		width = XML.getValue("settings:width", 0);
+		height = XML.getValue("settings:height", 0);
+
+		std::string t = XML.getValue("Tags:aaa", "");
+
+		lightness = XML.getValue("settings:lightness", 0.);
+		brightness = XML.getValue("settings:brightness", 0.);
+		hue = XML.getValue("settings:hue", 0.);
+
+		runtime = XML.getValue("settings:runtime", -1.);
+
+		XML.getAttributeNames("Tags", tags);
 	}
 	else
 	{
@@ -77,7 +88,7 @@ Item::Item(Video* video)
 		brightness = brightness / vidSize;
 		hue = hue / vidSize;
 
-		XML.setValue("settings:runtime", video->getRuntime()); //in seconds
+		runtime = video->getRuntime();
 
 		saveXML();
 	}
@@ -119,7 +130,11 @@ void Item::removeTag(std::string tag)
 std::string Item::getPropertyString() const
 {
 	char additional[512];
-	if (true)
+	if (runtime != -1.)
+	{
+		sprintf(additional, "Runtime: %fs\n", runtime);
+	}
+	else
 	{
 		sprintf(additional, "");
 	}
@@ -138,6 +153,12 @@ void Item::saveXML()
 	XML.setValue("settings:brightness", brightness);
 	XML.setValue("settings:hue", hue);
 	XML.addTag("Tags");
+
+	if (runtime != -1.)
+	{
+		XML.setValue("settings:runtime", runtime); //in seconds
+
+	}
 
 	printf("%s.xml saved \n", name.c_str());
 	for each (std::string tag in tags)
