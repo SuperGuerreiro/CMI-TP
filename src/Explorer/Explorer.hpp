@@ -14,9 +14,12 @@ public:
 	void add(Image* imageHandle);
 	void add(Video* videoHandle);
 
+	void generatePlaylists();
+
 	inline Item* operator[](int i) { return &items[i]; };
 
 private:
 	std::vector<Item> items;
 
+	std::map<std::string, std::vector<int>> playlists;
 };

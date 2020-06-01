@@ -82,22 +82,31 @@ void ofApp::setup(){
 		}
 	}));
 	propertiesScreen.add(new Group());
+
+	explorer.generatePlaylists();
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
 	topbar.update();
+	int i = elements.getSelectedIndex();
 	switch (currentView)
 	{
 	case PresentMode::Gallery:
 		elements.update();
 		break;
 	case PresentMode::ViewItem:
-		elements[elements.getSelectedIndex()]->update();
+		if (i != -1)
+		{
+			elements[i]->update();
+		}
 		break;
 	case PresentMode::ItemProperties:
 		propertiesScreen.update();
-		elements[elements.getSelectedIndex()]->update();
+		if (i != -1)
+		{
+			elements[i]->update();
+		}
 		break;
 	case PresentMode::Camera:
 		cam.update();
