@@ -35,7 +35,7 @@ void ofApp::setup(){
 	tb = new Button(0, 0, 0, 0, "Properties", ofColor::black, ofColor::lightGray, [this] { currentView = PresentMode::ItemProperties; });
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
-	tb = new Button(0, 0, 0, 0, "Presentation Mode", ofColor::white, ofColor::cornflowerBlue, [this] { currentView = PresentMode::Showcase; explorer.generatePlaylists(); });
+	tb = new Button(0, 0, 0, 0, "Presentation Mode", ofColor::white, ofColor::cornflowerBlue, [this] { currentView = PresentMode::Showcase; explorer.generatePlaylists(); elements.select(0); });
 	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	tb = new Button(0, 0, 0, 0, "CamMode", ofColor::white, ofColor::cornflowerBlue, [this] { currentView = PresentMode::Camera; });
 	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
@@ -88,8 +88,6 @@ void ofApp::setup(){
 		}
 	}));
 	propertiesScreen.add(new Group());
-	//explorer[0]->addTag("xisde");
-	//explorer.addTag(0, "EXXDEEEE");
 }
 
 //--------------------------------------------------------------
@@ -288,7 +286,7 @@ void ofApp::handleTransition()
 			}
 			lastView = currentView;
 		}
-		if (lastElement != elements.getSelectedIndex() && currentView == PresentMode::ViewItem)
+		if (lastElement != elements.getSelectedIndex() && (currentView == PresentMode::ViewItem || currentView == PresentMode::Showcase))
 		{
 			if (lastElement != -1 && elements[lastElement]->getType() == ElementType::Video)
 			{

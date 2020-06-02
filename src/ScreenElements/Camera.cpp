@@ -83,3 +83,21 @@ bool Camera::onClick(int x, int y, int button)
 {
 	return false;
 }
+
+void Camera::getProps(float * brightness, float * hue)
+{
+	float bValue = 0;
+	float hValue = 0;
+	ofPixels pixels = vidGrabber.getPixels();
+	size_t nPixels = pixels.size();
+	for (size_t i = 0; i < nPixels; i++)
+	{
+		ofColor color = pixels.getColor(i);
+		bValue += color.getBrightness();
+		hValue += color.getHue();
+	}
+	bValue = bValue / nPixels;
+	hValue = hValue / nPixels;
+	*brightness = bValue;
+	*hue = hValue;
+}

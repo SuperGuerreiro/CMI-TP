@@ -39,4 +39,10 @@ private:
 
 	std::vector<int> playlist;
 	int viewers = 0;
+	float brightness = 0;
+	float hue = 0;
+
+	float count = 0;
+	float maxCount = 5;
+	unsigned int idx = 0;
 };

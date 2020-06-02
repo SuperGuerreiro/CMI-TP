@@ -27,6 +27,7 @@ public:
 	void setElementsSize(int width, int height);
 	void scroll(float value);
 
+	inline int getSize() { return elements.size(); };
 	inline int getSelectedIndex() const { return selected; };
 	inline ScreenElement* operator[](int i) const { return elements[i]; };
 	inline void select(int i) { selected = i; };
