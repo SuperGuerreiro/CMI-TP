@@ -21,6 +21,11 @@ void ofApp::setup(){
 	elements.setOffset(0, TOPBAR_HEIGHT);
 
 	cam.setup(320, 240);
+	cam.setOffset(10, 10 + TOPBAR_HEIGHT);
+
+	display = DynamicDisplay(0, TOPBAR_HEIGHT, 100, 100, &elements, &cam, &explorer);
+
+	fillToggle = Button(0, 0, 12 + 15 * CHAR_WIDTH, 12 + CHAR_HEIGHT, "Toggle Stretch", ofColor::white, ofColor::cornflowerBlue, [this] { fill = !fill; elements.setFillMode(fill); });
 
 	Dropdown* td = new Dropdown(0, 0, 0, 0, "File", ofColor::white, ofColor::cornflowerBlue);
 	Button* tb = new Button(0, 0, 0, 0, "Browse", ofColor::black, ofColor::lightGray, [this] { currentView = PresentMode::Gallery; });
@@ -30,7 +35,7 @@ void ofApp::setup(){
 	tb = new Button(0, 0, 0, 0, "Properties", ofColor::black, ofColor::lightGray, [this] { currentView = PresentMode::ItemProperties; });
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
-	tb = new Button(0, 0, 0, 0, "Presentation Mode", ofColor::white, ofColor::cornflowerBlue, [this] {  });
+	tb = new Button(0, 0, 0, 0, "Presentation Mode", ofColor::white, ofColor::cornflowerBlue, [this] { currentView = PresentMode::Showcase; explorer.generatePlaylists(); });
 	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	tb = new Button(0, 0, 0, 0, "CamMode", ofColor::white, ofColor::cornflowerBlue, [this] { currentView = PresentMode::Camera; });
 	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
@@ -41,6 +46,7 @@ void ofApp::setup(){
 	//dir.allowExt("gif");
 	dir.allowExt("mov");
 	dir.allowExt("mp4");
+	dir.allowExt("webm");
 
 	dir.sort();
 	int index = -1;
@@ -57,7 +63,7 @@ void ofApp::setup(){
 				explorer.add(t);
 				index++;
 			}
-			else if (ext == ".mov" || ext == ".mp4")
+			else if (ext == ".mov" || ext == ".mp4" || ext == ".webm")
 			{
 				Video* t = new Video(pathname, 0, 0, ELEMENT_WIDTH, ELEMENT_HEIGHT);
 				elements.add(t);
@@ -77,7 +83,6 @@ void ofApp::setup(){
 			if (tag != "")
 			{
 				explorer[elements.getSelectedIndex()]->addTag(tag);
-				//explorer.addTag(elements.getSelectedIndex(), tag);
 				updateFileProperties();
 			}
 		}
@@ -90,9 +95,37 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update() {
 	topbar.update();
-	elements.update();
-	cam.update();
-	propertiesScreen.update();
+	int i = elements.getSelectedIndex();
+	switch (currentView)
+	{
+	case PresentMode::Gallery:
+		elements.update();
+		break;
+	case PresentMode::ViewItem:
+		if (i != -1)
+		{
+			elements[i]->update();
+		}
+		fillToggle.update();
+		break;
+	case PresentMode::ItemProperties:
+		propertiesScreen.update();
+		if (i != -1)
+		{
+			elements[i]->update();
+		}
+		break;
+	case PresentMode::Camera:
+		cam.update();
+		break;
+	case PresentMode::Showcase:
+		display.update();
+		fillToggle.update();
+		break;
+	default:
+		break;
+	}
+	handleTransition();
 }
 
 //--------------------------------------------------------------
@@ -107,6 +140,7 @@ void ofApp::draw() {
 		{
 			elements[elements.getSelectedIndex()]->draw(0, TOPBAR_HEIGHT, width, height - TOPBAR_HEIGHT);
 		}
+		fillToggle.draw();
 		break;
 	case PresentMode::Camera:
 		cam.draw();
@@ -118,6 +152,10 @@ void ofApp::draw() {
 			elements[elements.getSelectedIndex()]->draw(width - ELEMENT_WIDTH - 10, TOPBAR_HEIGHT + 10, ELEMENT_WIDTH, ELEMENT_HEIGHT);
 		}
 		break;
+	case PresentMode::Showcase:
+		display.draw();
+		fillToggle.draw();
+		break;
 	default:
 		break;
 	}
@@ -126,31 +164,21 @@ void ofApp::draw() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-	elements.onKeyPressed(key);
+	if (currentView != PresentMode::Showcase && currentView != PresentMode::Camera)
+	{
+		elements.onKeyPressed(key);
+	}
 	updateFileProperties();
-	switch (key) {
+	switch (key) 
+	{
 	case OF_KEY_RETURN: //return = enter
 		if (currentView == PresentMode::ViewItem)
 		{
 			currentView = PresentMode::Gallery;
-			
-			//If user is in gallery, video shows thumbnail
-			if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video) {
-				Video* tmp = (Video*)elements[elements.getSelectedIndex()];
-				tmp->setFullScreen(false);
-			}
 		}
 		else
 		{
 			currentView = PresentMode::ViewItem;
-
-			//EdgeHistogram e = EdgeHistogram((Image*)elements[elements.getSelectedIndex()]);
-
-			//If user chooses fullscreen mode, video starts playing
-			if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video) {
-				Video* tmp = (Video*)elements[elements.getSelectedIndex()];
-				tmp->setFullScreen(true);
-			}
 		}
 		break;
 	}
@@ -182,7 +210,11 @@ void ofApp::mousePressed(int x, int y, int button){
 			updateFileProperties();
 			break;
 		case PresentMode::ItemProperties:
-			propertiesScreen.onClick(x, y, button);
+			propertiesScreen.onClick(x, y, button); 
+		case PresentMode::ViewItem:
+		case PresentMode::Showcase:
+			fillToggle.onClick(x, y, button);
+			break;
 		default:
 			break;
 		}
@@ -210,6 +242,8 @@ void ofApp::windowResized(int w, int h){
 	height = h;
 	topbar.setSize(w, TOPBAR_HEIGHT);
 	elements.setSize(w, h - TOPBAR_HEIGHT);
+	display.setSize(w, h - TOPBAR_HEIGHT);
+	fillToggle.setOffset(width - (22 + 15 * CHAR_WIDTH), height - (22 + CHAR_HEIGHT));
 	resizeFileProperties();
 }
 
@@ -229,6 +263,45 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 
+
+void ofApp::handleTransition()
+{
+	if (elements.getSelectedIndex() != -1)
+	{
+		if (currentView != lastView)
+		{
+			if (currentView == PresentMode::ViewItem || currentView == PresentMode::Showcase)
+			{
+				if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video)
+				{
+					((Video*)elements[elements.getSelectedIndex()])->setFullScreen(true);
+				}
+				elements.setFillMode(fill);
+			}
+			else if (lastView == PresentMode::ViewItem || currentView == PresentMode::Showcase)
+			{
+				if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video)
+				{
+					((Video*)elements[elements.getSelectedIndex()])->setFullScreen(false);
+				}
+				elements.setFillMode(false);
+			}
+			lastView = currentView;
+		}
+		if (lastElement != elements.getSelectedIndex() && currentView == PresentMode::ViewItem)
+		{
+			if (lastElement != -1 && elements[lastElement]->getType() == ElementType::Video)
+			{
+				((Video*)elements[lastElement])->setFullScreen(false);
+			}
+			if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video)
+			{
+				((Video*)elements[elements.getSelectedIndex()])->setFullScreen(true);
+			}
+			lastElement = elements.getSelectedIndex();
+		}
+	}
+}
 
 void ofApp::updateFileProperties()
 {

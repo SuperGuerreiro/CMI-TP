@@ -29,7 +29,7 @@ public:
 
 	inline int getSelectedIndex() const { return selected; };
 	inline ScreenElement* operator[](int i) const { return elements[i]; };
-	void unselect();
+	inline void select(int i) { selected = i; };
 
 private:
 	int xOffset;

@@ -17,7 +17,8 @@ enum class ElementType
 	Button,
 	Camera,
 	Group,
-	Text
+	Text,
+	DynamicDisplay
 };
 
 using SimpleCallback = std::function<void()>;
