@@ -65,6 +65,12 @@ Item::Item(Image* image)
 
 		histogramVals = e.getHistogramVals();
 
+		char tag[64];
+		sprintf(tag, "brightness_%c", conv[(int)brightness / 86]);
+		addTag(tag);
+		sprintf(tag, "hue_%c", conv[(int)hue / 86]);
+		addTag(tag);
+
 		saveXML();
 	}
 }

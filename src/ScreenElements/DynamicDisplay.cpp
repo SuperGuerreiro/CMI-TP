@@ -14,7 +14,6 @@ void DynamicDisplay::update()
 	if (maxCount < count)
 	{
 		count = 0;
-		idx++;
 	}
 	if (count == 0)
 	{
@@ -24,31 +23,82 @@ void DynamicDisplay::update()
 			switch (v)
 			{
 			case 0:
-				playlist = explorer->getPlaylist("zero_viewers");
+				vPlaylist = explorer->getPlaylist("zero_viewers");
 				break;
 			case 1:
-				playlist = explorer->getPlaylist("one_viewers");
+				vPlaylist = explorer->getPlaylist("one_viewers");
 				break;
 			case 2:
-				playlist = explorer->getPlaylist("two_viewers");
+				vPlaylist = explorer->getPlaylist("two_viewers");
 				break;
 			case 3:
-				playlist = explorer->getPlaylist("three_viewers");
+				vPlaylist = explorer->getPlaylist("three_viewers");
 				break;
 			default:
 				break;
 			}
 			viewers = v;
 		}
-		cam->getProps(&brightness, &hue);
-		//printf("%f - %f\n", brightness, hue);
-		if (playlist.empty())
+		cam->getProps(&brightness, &hue); // 256 total values
+		int bType = brightness / 86;
+		switch (bType)
 		{
+		case 0:
+			bPlaylist = explorer->getPlaylist("brightness_a");
+			break;
+		case 1:
+			bPlaylist = explorer->getPlaylist("brightness_b");
+			break;
+		case 2:
+			bPlaylist = explorer->getPlaylist("brightness_c");
+			break;
+		default:
+			break;
+		}
+		int hType = hue / 86;
+		switch (hType)
+		{
+		case 0:
+			hPlaylist = explorer->getPlaylist("hue_a");
+			break;
+		case 1:
+			hPlaylist = explorer->getPlaylist("hue_b");
+			break;
+		case 2:
+			hPlaylist = explorer->getPlaylist("hue_c");
+			break;
+		default:
+			break;
+		}
+		printf("bright: %f hue: %f - %d\n", brightness, hue, hType);
+		if (vPlaylist.empty() && bPlaylist.empty() && hPlaylist.empty())
+		{
+			idx++;
 			elements->select(idx % elements->getSize());
 		}
 		else
 		{
-			elements->select(playlist[0]);
+			std::vector<int>* t;
+			do
+			{
+				idx++;
+				int pid = idx % 3;
+				switch (pid)
+				{
+				case 0:
+					t = &vPlaylist;
+					break;
+				case 1:
+					t = &bPlaylist;
+					break;
+				case 2:
+					t = &hPlaylist;
+					break;
+				default:
+					break;
+				}
+			} while (t->empty());
+			elements->select((*t)[idx % t->size()]);
 		}
 		if ((*elements)[elements->getSelectedIndex()]->getType() == ElementType::Video)
 		{

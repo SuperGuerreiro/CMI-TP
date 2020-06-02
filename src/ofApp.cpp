@@ -83,7 +83,6 @@ void ofApp::setup(){
 			if (tag != "")
 			{
 				explorer[elements.getSelectedIndex()]->addTag(tag);
-				updateFileProperties();
 			}
 		}
 	}));
@@ -166,7 +165,6 @@ void ofApp::keyPressed(int key) {
 	{
 		elements.onKeyPressed(key);
 	}
-	updateFileProperties();
 	switch (key) 
 	{
 	case OF_KEY_RETURN: //return = enter
@@ -205,7 +203,6 @@ void ofApp::mousePressed(int x, int y, int button){
 		{
 		case PresentMode::Gallery:
 			elements.onClick(x, y, button);
-			updateFileProperties();
 			break;
 		case PresentMode::ItemProperties:
 			propertiesScreen.onClick(x, y, button); 
@@ -286,15 +283,19 @@ void ofApp::handleTransition()
 			}
 			lastView = currentView;
 		}
-		if (lastElement != elements.getSelectedIndex() && (currentView == PresentMode::ViewItem || currentView == PresentMode::Showcase))
+		if (lastElement != elements.getSelectedIndex())
 		{
-			if (lastElement != -1 && elements[lastElement]->getType() == ElementType::Video)
+			updateFileProperties();
+			if (currentView == PresentMode::ViewItem || currentView == PresentMode::Showcase)
 			{
-				((Video*)elements[lastElement])->setFullScreen(false);
-			}
-			if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video)
-			{
-				((Video*)elements[elements.getSelectedIndex()])->setFullScreen(true);
+				if (lastElement != -1 && elements[lastElement]->getType() == ElementType::Video)
+				{
+					((Video*)elements[lastElement])->setFullScreen(false);
+				}
+				if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video)
+				{
+					((Video*)elements[elements.getSelectedIndex()])->setFullScreen(true);
+				}
 			}
 			lastElement = elements.getSelectedIndex();
 		}
@@ -317,7 +318,6 @@ void ofApp::updateFileProperties()
 			g->add(new Button(0, 0, 12 + (tag.length() * CHAR_WIDTH), 12 + CHAR_HEIGHT, tag, ofColor::white, ofColor::red, [this, cur, tag]
 			{
 				cur->removeTag(tag);
-				updateFileProperties();
 			}));
 		}
 		resizeFileProperties();

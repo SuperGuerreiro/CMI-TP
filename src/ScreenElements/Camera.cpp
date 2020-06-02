@@ -89,15 +89,18 @@ void Camera::getProps(float * brightness, float * hue)
 	float bValue = 0;
 	float hValue = 0;
 	ofPixels pixels = vidGrabber.getPixels();
-	size_t nPixels = pixels.size();
-	for (size_t i = 0; i < nPixels; i++)
+	for (size_t y = 0; y < pixels.getHeight(); y++)
 	{
-		ofColor color = pixels.getColor(i);
-		bValue += color.getBrightness();
-		hValue += color.getHue();
+		for (size_t x = 0; x < pixels.getWidth(); x++)
+		{
+			ofColor color = pixels.getColor(x, y);
+			bValue += color.getBrightness();
+			hValue += color.getHue();
+		}
 	}
-	bValue = bValue / nPixels;
-	hValue = hValue / nPixels;
+	size_t s = pixels.getWidth() * pixels.getHeight();
+	bValue = bValue / s;
+	hValue = hValue / s;
 	*brightness = bValue;
 	*hue = hValue;
 }
