@@ -4,6 +4,7 @@ Item::Item(Image* image)
 {
 	name = image->getName();
 	ofxXmlSettings XML;
+
 	if (XML.loadFile(name + ".xml"))
 	{
 		printf("%s.xml loaded \n", name.c_str());
@@ -21,6 +22,8 @@ Item::Item(Image* image)
 	}
 	else
 	{
+		EdgeHistogram e = EdgeHistogram(image);
+
 		width = image->getOFHandle().getWidth();
 		height = image->getOFHandle().getHeight();
 
@@ -35,11 +38,12 @@ Item::Item(Image* image)
 				hue += currPixel.getHue();
 			}
 		}
-
 		int imgSize = width * height;
 		lightness = lightness / imgSize;
 		brightness = brightness / imgSize;
 		hue = hue / imgSize;
+
+		histogramVals = e.getHistogramVals();
 
 		saveXML();
 	}
@@ -152,6 +156,18 @@ void Item::saveXML()
 	XML.setValue("settings:lightness", lightness);
 	XML.setValue("settings:brightness", brightness);
 	XML.setValue("settings:hue", hue);
+
+	
+	if (histogramVals.size() != 0) {
+		char temp[20];
+		for (int i = 0; i < histogramVals.size(); i++) {
+			sprintf(temp, "edgeHistogram:%d", i);
+
+			XML.setValue(temp, histogramVals[i]);
+			//printf("histVals: %f", histogramVals[i]);
+		}
+	}
+
 	XML.addTag("Tags");
 
 	if (runtime != -1.)

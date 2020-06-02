@@ -14,12 +14,12 @@ class EdgeHistogram {
 public:
 	EdgeHistogram(Image* image);
 	EdgeHistogram(Video* video);
-
-	
+	std::vector<float> getHistogramVals();
 
 private:
 	int width, height;
 	int nRows, mCols;
+
 
 	std::vector<cv::Mat> imgChunks;
 
@@ -27,4 +27,6 @@ private:
 	const int SUBDIVISIONS = 4;
 
 	std::vector<cv::Mat> tmpFilterResult;
+
+	std::vector<float> edgeHistogramVals;
 };

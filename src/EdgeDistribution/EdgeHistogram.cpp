@@ -120,12 +120,36 @@ EdgeHistogram::EdgeHistogram(Image* image) {
 
 
 			//Percentage 
-			//Counts white pixels in image
+			//Counts white pixels in image with a threshold
 			cvtColor(currMax, currMax, COLOR_BGR2GRAY);
 
-			float percentage = countNonZero(currMax)/(currMax.cols*currMax.rows);
-			printf("Whites: %d\n", countNonZero(currMax));
+			ofImage currImg;
+			toOf(currMax, currImg);
+
+			width = currImg.getWidth();
+			height = currImg.getHeight();
+
+			float totalWhitePixels = 0;
+
+			for (int j = 0; j < width; j++)
+			{
+				for (int k = 0; k < height; k++)
+				{
+					ofColor currPixel = currImg.getColor(j, k);
+					if (currPixel.getBrightness() >= 60) {
+						totalWhitePixels++;
+					}
+
+				}
+			}
+
+			float percentage = totalWhitePixels / (width*height);
+			edgeHistogramVals.push_back(percentage);
+
+			printf("Whites: %f\n", totalWhitePixels);
+			printf("Res: %f\n", width*height);
 			printf("%9.6f\n", percentage);
+			
 		}
 	}
 	catch (cv::Exception & e)
@@ -136,4 +160,8 @@ EdgeHistogram::EdgeHistogram(Image* image) {
 
 EdgeHistogram::EdgeHistogram(Video * video)
 {
+}
+
+std::vector<float> EdgeHistogram::getHistogramVals() {
+	return edgeHistogramVals;
 }
