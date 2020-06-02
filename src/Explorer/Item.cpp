@@ -1,5 +1,7 @@
 #include "Item.hpp"
 
+const char conv[16] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'o', 'p', 'q' };
+
 Item::Item(Image* image)
 {
 	name = image->getName();
@@ -21,22 +23,22 @@ Item::Item(Image* image)
 		XML.getAttributeNames("Tags", tags);
 
 		histogramVals.resize(16);
-		histogramVals[0] = XML.getValue("histogram:0", -1.);
-		histogramVals[1] = XML.getValue("histogram:1", -1.);
-		histogramVals[2] = XML.getValue("histogram:2", -1.);
-		histogramVals[3] = XML.getValue("histogram:3", -1.);
-		histogramVals[4] = XML.getValue("histogram:4", -1.);
-		histogramVals[5] = XML.getValue("histogram:5", -1.);
-		histogramVals[6] = XML.getValue("histogram:6", -1.);
-		histogramVals[7] = XML.getValue("histogram:7", -1.);
-		histogramVals[8] = XML.getValue("histogram:8", -1.);
-		histogramVals[9] = XML.getValue("histogram:9", -1.);
-		histogramVals[10] = XML.getValue("histogram:10", -1.);
-		histogramVals[11] = XML.getValue("histogram:11", -1.);
-		histogramVals[12] = XML.getValue("histogram:12", -1.);
-		histogramVals[13] = XML.getValue("histogram:13", -1.);
-		histogramVals[14] = XML.getValue("histogram:14", -1.);
-		histogramVals[15] = XML.getValue("histogram:15", -1.);
+		histogramVals[0] = XML.getValue("edgeHistogram:a", -1.);
+		histogramVals[1] = XML.getValue("edgeHistogram:b", -1.);
+		histogramVals[2] = XML.getValue("edgeHistogram:c", -1.);
+		histogramVals[3] = XML.getValue("edgeHistogram:d", -1.);
+		histogramVals[4] = XML.getValue("edgeHistogram:e", -1.);
+		histogramVals[5] = XML.getValue("edgeHistogram:f", -1.);
+		histogramVals[6] = XML.getValue("edgeHistogram:g", -1.);
+		histogramVals[7] = XML.getValue("edgeHistogram:h", -1.);
+		histogramVals[8] = XML.getValue("edgeHistogram:i", -1.);
+		histogramVals[9] = XML.getValue("edgeHistogram:j", -1.);
+		histogramVals[10] = XML.getValue("edgeHistogram:k", -1.);
+		histogramVals[11] = XML.getValue("edgeHistogram:m", -1.);
+		histogramVals[12] = XML.getValue("edgeHistogram:n", -1.);
+		histogramVals[13] = XML.getValue("edgeHistogram:o", -1.);
+		histogramVals[14] = XML.getValue("edgeHistogram:p", -1.);
+		histogramVals[15] = XML.getValue("edgeHistogram:k", -1.);
 	}
 	else
 	{
@@ -185,7 +187,7 @@ void Item::saveXML()
 	if (histogramVals.size() != 0) {
 		char temp[20];
 		for (int i = 0; i < histogramVals.size(); i++) {
-			sprintf(temp, "edgeHistogram:%d", i);
+			sprintf(temp, "edgeHistogram:%c", conv[i]);
 
 			XML.setValue(temp, histogramVals[i]);
 		}
