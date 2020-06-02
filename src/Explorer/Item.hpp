@@ -3,6 +3,7 @@
 #include "ofxXmlSettings.h"
 #include "../ScreenElements/Image.hpp"
 #include "../ScreenElements/Video.hpp"
+#include "../EdgeDistribution/EdgeHistogram.hpp"
 
 class Item
 {
@@ -28,5 +29,6 @@ private:
 	float runtime = -1.;
 
 	std::vector<std::string> tags;
+	std::vector<float> histogramVals;
 
 };
