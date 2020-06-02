@@ -25,6 +25,7 @@ public:
 	const inline ElementType getType() const override { return ElementType::Camera; };
 	const inline std::string getName() const override { return ""; };
 
+	inline int getNumFaces() { return finder.blobs.size(); };
 
 private:
 

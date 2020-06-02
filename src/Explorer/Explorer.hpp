@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ofMain.h";
+#include "ofMain.h"
 #include "Item.hpp"
 #include "../ScreenElements/Image.hpp"
 #include "../ScreenElements/Video.hpp"
@@ -17,6 +17,7 @@ public:
 	void generatePlaylists();
 
 	inline Item* operator[](int i) { return &items[i]; };
+	inline std::vector<int>& getPlaylist(std::string tag) { return playlists[tag]; };
 
 private:
 	std::vector<Item> items;

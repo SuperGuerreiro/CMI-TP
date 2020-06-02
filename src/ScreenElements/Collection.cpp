@@ -76,7 +76,10 @@ void Collection::setSize(int width, int height)
 
 void Collection::setFillMode(bool fill)
 {
-
+	for each (ScreenElement* e in elements)
+	{
+		e->setFillMode(fill);
+	}
 }
 
 bool Collection::onClick(int x, int y, int button)
@@ -139,11 +142,6 @@ void Collection::scroll(float value)
 	scrollVal = std::min(scrollVal, 1.0f);
 	scrollVal = std::max(scrollVal, 0.0f);
 	resetAttributes();
-}
-
-void Collection::unselect()
-{
-	selected = -1;
 }
 
 void Collection::resetAttributes()

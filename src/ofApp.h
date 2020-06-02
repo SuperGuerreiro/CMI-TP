@@ -5,6 +5,8 @@
 #include "ScreenElements/TopBar.hpp"
 #include "ScreenElements/Camera.hpp"
 #include "ScreenElements/Group.hpp"
+#include "ScreenElements/Button.hpp"
+#include "ScreenElements/DynamicDisplay.hpp"
 #include "Explorer/Explorer.hpp"
 #include "ofxXmlSettings.h"
 
@@ -56,7 +58,12 @@ private:
 		int lastElement = -1;
 		PresentMode lastView = PresentMode::None;
 
-		void videoTransition();
+		DynamicDisplay display;
+
+		Button fillToggle;
+		bool fill = false;
+
+		void handleTransition();
 		void updateFileProperties();
 		void resizeFileProperties();
 };

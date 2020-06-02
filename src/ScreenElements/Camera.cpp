@@ -33,6 +33,12 @@ Camera::Camera(int camWidth, int camHeight)
 void Camera::update() {
 	vidGrabber.update();
 	currTime++;
+
+	//Finds faces in a given interval of frames
+	if (currTime > INTERVAL_TIME) {
+		finder.findHaarObjects(vidGrabber.getPixels());
+		currTime = 0;
+	}
 }
 
 void Camera::draw() 
@@ -48,11 +54,6 @@ void Camera::draw(int xOffset, int yOffset, int width, int height)
 
 void Camera::detectFaces(ofPixels videoPixels)
 {
-	//Finds faces in a given interval of frames
-	if (currTime > INTERVAL_TIME) {
-		finder.findHaarObjects(videoPixels);
-		currTime = 0;
-	}
 
 	ofNoFill(); //To draw square unfilled
 	for (unsigned int i = 0; i < finder.blobs.size(); i++) {

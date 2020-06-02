@@ -254,10 +254,10 @@ void Video::generateThumbnailFrames() {
 void Video::setFullScreen(bool bFullScreen) {
 	isFullScreen = bFullScreen;
 	self.firstFrame();
+	self.setPaused(!bFullScreen);
 	if (bFullScreen)
 	{
 		self.play();
-		self.setPaused(false);
 	}
 }
 
