@@ -19,6 +19,24 @@ Item::Item(Image* image)
 		hue = XML.getValue("settings:hue", 0.);
 
 		XML.getAttributeNames("Tags", tags);
+
+		histogramVals.resize(16);
+		histogramVals[0] = XML.getValue("histogram:0", -1.);
+		histogramVals[1] = XML.getValue("histogram:1", -1.);
+		histogramVals[2] = XML.getValue("histogram:2", -1.);
+		histogramVals[3] = XML.getValue("histogram:3", -1.);
+		histogramVals[4] = XML.getValue("histogram:4", -1.);
+		histogramVals[5] = XML.getValue("histogram:5", -1.);
+		histogramVals[6] = XML.getValue("histogram:6", -1.);
+		histogramVals[7] = XML.getValue("histogram:7", -1.);
+		histogramVals[8] = XML.getValue("histogram:8", -1.);
+		histogramVals[9] = XML.getValue("histogram:9", -1.);
+		histogramVals[10] = XML.getValue("histogram:10", -1.);
+		histogramVals[11] = XML.getValue("histogram:11", -1.);
+		histogramVals[12] = XML.getValue("histogram:12", -1.);
+		histogramVals[13] = XML.getValue("histogram:13", -1.);
+		histogramVals[14] = XML.getValue("histogram:14", -1.);
+		histogramVals[15] = XML.getValue("histogram:15", -1.);
 	}
 	else
 	{
@@ -133,6 +151,12 @@ void Item::removeTag(std::string tag)
 
 std::string Item::getPropertyString() const
 {
+	char edge[512];
+	sprintf(edge, "Edge Histogram:\n\t%f\t%f\t%f\t%f\n\t%f\t%f\t%f\t%f\n\t%f\t%f\t%f\t%f\n\t%f\t%f\t%f\t%f\n",
+		histogramVals[0], histogramVals[1], histogramVals[2], histogramVals[3], 
+		histogramVals[4], histogramVals[5], histogramVals[6], histogramVals[7], 
+		histogramVals[8], histogramVals[9], histogramVals[10], histogramVals[11], 
+		histogramVals[12], histogramVals[13], histogramVals[14], histogramVals[15]);
 	char additional[512];
 	if (runtime != -1.)
 	{
@@ -143,7 +167,7 @@ std::string Item::getPropertyString() const
 		sprintf(additional, "");
 	}
 	char res[1024];
-	sprintf(res, "Filename: %s\nSize: %dx%d\n\nLightness: %f\nBrightness: %f\nHue: %f\n\n%s", name.c_str(), width, height, lightness, brightness, hue, additional);
+	sprintf(res, "Filename: %s\nSize: %dx%d\n\nLightness: %f\nBrightness: %f\nHue: %f\n\n%s\n\n%s", name.c_str(), width, height, lightness, brightness, hue, edge, additional);
 	return res;
 }
 
@@ -164,7 +188,6 @@ void Item::saveXML()
 			sprintf(temp, "edgeHistogram:%d", i);
 
 			XML.setValue(temp, histogramVals[i]);
-			//printf("histVals: %f", histogramVals[i]);
 		}
 	}
 

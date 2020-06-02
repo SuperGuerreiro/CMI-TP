@@ -40,7 +40,7 @@ EdgeHistogram::EdgeHistogram(Image* image) {
 				rectangle(maskImg, Point(x, y), Point(x + widthBlock - 1, y + heightBlock - 1), CV_RGB(255, 0, 0), 1); 
 				ofImage test;
 				toOf(maskImg, test);
-				test.save("test.jpg");
+				//test.save("test.jpg");
 			}
 		}
 	}
@@ -113,11 +113,11 @@ EdgeHistogram::EdgeHistogram(Image* image) {
 
 			ofImage test02;
 			toOf(currMax, test02);
-
+			/*
 			char temp[20];
 			sprintf(temp, "test02-%d.jpg", i);
 			test02.save(temp);
-
+			*/
 
 			//Percentage 
 			//Counts white pixels in image with a threshold
@@ -146,8 +146,8 @@ EdgeHistogram::EdgeHistogram(Image* image) {
 			float percentage = totalWhitePixels / (width*height);
 			edgeHistogramVals.push_back(percentage);
 
-			printf("Whites: %f\n", totalWhitePixels);
-			printf("Res: %f\n", width*height);
+			printf("Whites: %f - ", totalWhitePixels);
+			printf("Res: %d -> ", width*height);
 			printf("%9.6f\n", percentage);
 			
 		}
