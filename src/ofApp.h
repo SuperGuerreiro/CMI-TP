@@ -6,7 +6,10 @@
 #include "ScreenElements/Camera.hpp"
 #include "ScreenElements/Group.hpp"
 #include "Explorer/Explorer.hpp"
+#include "EdgeDistribution/EdgeHistogram.hpp"
 #include "ofxXmlSettings.h"
+#include "ofxOpenCv.h"
+#include "ofxCv.h"
 
 
 
@@ -50,6 +53,7 @@ private:
 		Collection elements;
 		Explorer explorer;
 		Group propertiesScreen;
+		
 		int width, height;
 
 

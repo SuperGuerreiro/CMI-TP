@@ -7,6 +7,8 @@
 #include "ScreenElements/Button.hpp"
 #include "ScreenElements/Text.hpp"
 
+
+
 #define DIRECTORY "gallery/"
 #define ELEMENT_WIDTH 300
 #define ELEMENT_HEIGHT 300
@@ -66,17 +68,23 @@ void ofApp::setup(){
 	}
 
 	propertiesScreen.add(new Text("THIS IS A TEXT\nA REALLY BIG TEXT\nNOW TELL ME WHAT YOU WANT\nWHAT YOU REALLY REALLY WANT", ofColor::black, 0 + 10, TOPBAR_HEIGHT + 10));
-	propertiesScreen.add(new Text("Tags:", ofColor::black, 0, 0));
+	propertiesScreen.add(new Text("Add/Remove Tags:", ofColor::black, 0, 0));
 	propertiesScreen.add(new Button(0, 0, 12 + (7 * CHAR_WIDTH), 12 + CHAR_HEIGHT, "Add Tag", ofColor::white, ofColor::cornflowerBlue, [this]
 	{
-		std::string tag = ofSystemTextBoxDialog("New Tag", "");
-		if (tag != "")
+		if (elements.getSelectedIndex() != -1)
 		{
-			explorer[elements.getSelectedIndex()]->addTag(tag);
-			updateFileProperties();
+			std::string tag = ofSystemTextBoxDialog("New Tag", "");
+			if (tag != "")
+			{
+				explorer[elements.getSelectedIndex()]->addTag(tag);
+				//explorer.addTag(elements.getSelectedIndex(), tag);
+				updateFileProperties();
+			}
 		}
 	}));
 	propertiesScreen.add(new Group());
+	//explorer[0]->addTag("xisde");
+	//explorer.addTag(0, "EXXDEEEE");
 }
 
 //--------------------------------------------------------------
@@ -135,6 +143,8 @@ void ofApp::keyPressed(int key) {
 		else
 		{
 			currentView = PresentMode::ViewItem;
+
+			//EdgeHistogram e = EdgeHistogram((Image*)elements[elements.getSelectedIndex()]);
 
 			//If user chooses fullscreen mode, video starts playing
 			if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video) {
