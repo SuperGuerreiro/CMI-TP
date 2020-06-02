@@ -51,7 +51,7 @@ Item::Item(Video* video)
 	name = video->getName();
 	if (XML.loadFile(name + ".xml"))
 	{
-		printf("%s_settings.xml loaded \n", name);
+		printf("%s.xml loaded \n", name.c_str());
 
 		width = XML.getValue("settings:width", 0);
 		height = XML.getValue("settings:height", 0);
