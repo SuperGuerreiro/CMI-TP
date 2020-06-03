@@ -215,7 +215,6 @@ void ofApp::keyPressed(int key) {
 	default:
 		break;
 	}
-	printf("%d\n", key);
 }
 
 //--------------------------------------------------------------

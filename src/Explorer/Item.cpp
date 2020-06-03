@@ -16,31 +16,47 @@ Item::Item(Image* image)
 		width = XML.getValue("settings:width", 0);
 		height = XML.getValue("settings:height", 0);
 
-		std::string t = XML.getValue("Tags:aaa", "");
-
 		lightness = XML.getValue("settings:lightness", 0.);
 		brightness = XML.getValue("settings:brightness", 0.);
 		hue = XML.getValue("settings:hue", 0.);
 
 		XML.getAttributeNames("Tags", tags);
 
-		histogramVals.resize(16);
-		histogramVals[0] = XML.getValue("histogram:0", -1.);
-		histogramVals[1] = XML.getValue("histogram:1", -1.);
-		histogramVals[2] = XML.getValue("histogram:2", -1.);
-		histogramVals[3] = XML.getValue("histogram:3", -1.);
-		histogramVals[4] = XML.getValue("histogram:4", -1.);
-		histogramVals[5] = XML.getValue("histogram:5", -1.);
-		histogramVals[6] = XML.getValue("histogram:6", -1.);
-		histogramVals[7] = XML.getValue("histogram:7", -1.);
-		histogramVals[8] = XML.getValue("histogram:8", -1.);
-		histogramVals[9] = XML.getValue("histogram:9", -1.);
-		histogramVals[10] = XML.getValue("histogram:10", -1.);
-		histogramVals[11] = XML.getValue("histogram:11", -1.);
-		histogramVals[12] = XML.getValue("histogram:12", -1.);
-		histogramVals[13] = XML.getValue("histogram:13", -1.);
-		histogramVals[14] = XML.getValue("histogram:14", -1.);
-		histogramVals[15] = XML.getValue("histogram:15", -1.);
+		edgeHistogramVals.resize(16);
+		edgeHistogramVals[0] = XML.getValue("edgeHistogram:a", -1.);
+		edgeHistogramVals[1] = XML.getValue("edgeHistogram:b", -1.);
+		edgeHistogramVals[2] = XML.getValue("edgeHistogram:c", -1.);
+		edgeHistogramVals[3] = XML.getValue("edgeHistogram:d", -1.);
+		edgeHistogramVals[4] = XML.getValue("edgeHistogram:e", -1.);
+		edgeHistogramVals[5] = XML.getValue("edgeHistogram:f", -1.);
+		edgeHistogramVals[6] = XML.getValue("edgeHistogram:g", -1.);
+		edgeHistogramVals[7] = XML.getValue("edgeHistogram:h", -1.);
+		edgeHistogramVals[8] = XML.getValue("edgeHistogram:i", -1.);
+		edgeHistogramVals[9] = XML.getValue("edgeHistogram:j", -1.);
+		edgeHistogramVals[10] = XML.getValue("edgeHistogram:k", -1.);
+		edgeHistogramVals[11] = XML.getValue("edgeHistogram:m", -1.);
+		edgeHistogramVals[12] = XML.getValue("edgeHistogram:n", -1.);
+		edgeHistogramVals[13] = XML.getValue("edgeHistogram:o", -1.);
+		edgeHistogramVals[14] = XML.getValue("edgeHistogram:p", -1.);
+		edgeHistogramVals[15] = XML.getValue("edgeHistogram:q", -1.);
+
+		texHistogramVals.resize(16);
+		texHistogramVals[0] = XML.getValue("texHistogram:a", -1.);
+		texHistogramVals[1] = XML.getValue("texHistogram:b", -1.);
+		texHistogramVals[2] = XML.getValue("texHistogram:c", -1.);
+		texHistogramVals[3] = XML.getValue("texHistogram:d", -1.);
+		texHistogramVals[4] = XML.getValue("texHistogram:e", -1.);
+		texHistogramVals[5] = XML.getValue("texHistogram:f", -1.);
+		texHistogramVals[6] = XML.getValue("texHistogram:g", -1.);
+		texHistogramVals[7] = XML.getValue("texHistogram:h", -1.);
+		texHistogramVals[8] = XML.getValue("texHistogram:i", -1.);
+		texHistogramVals[9] = XML.getValue("texHistogram:j", -1.);
+		texHistogramVals[10] = XML.getValue("texHistogram:k", -1.);
+		texHistogramVals[11] = XML.getValue("texHistogram:m", -1.);
+		texHistogramVals[12] = XML.getValue("texHistogram:n", -1.);
+		texHistogramVals[13] = XML.getValue("texHistogram:o", -1.);
+		texHistogramVals[14] = XML.getValue("texHistogram:p", -1.);
+		texHistogramVals[15] = XML.getValue("texHistogram:q", -1.);
 	}
 	else
 	{
@@ -65,7 +81,8 @@ Item::Item(Image* image)
 		brightness = brightness / imgSize;
 		hue = hue / imgSize;
 
-		histogramVals = e.getHistogramVals();
+		edgeHistogramVals = e.getHistogramVals();
+		texHistogramVals = e.getTextureHistogramVals();
 
 		char tag[64];
 		sprintf(tag, "brightness_%c", conv[(int)brightness / 86]);
@@ -88,8 +105,6 @@ Item::Item(Video* video)
 		width = XML.getValue("settings:width", 0);
 		height = XML.getValue("settings:height", 0);
 
-		std::string t = XML.getValue("Tags:aaa", "");
-
 		lightness = XML.getValue("settings:lightness", 0.);
 		brightness = XML.getValue("settings:brightness", 0.);
 		hue = XML.getValue("settings:hue", 0.);
@@ -98,23 +113,41 @@ Item::Item(Video* video)
 
 		XML.getAttributeNames("Tags", tags);
 
-		histogramVals.resize(16);
-		histogramVals[0] = XML.getValue("edgeHistogram:a", -1.);
-		histogramVals[1] = XML.getValue("edgeHistogram:b", -1.);
-		histogramVals[2] = XML.getValue("edgeHistogram:c", -1.);
-		histogramVals[3] = XML.getValue("edgeHistogram:d", -1.);
-		histogramVals[4] = XML.getValue("edgeHistogram:e", -1.);
-		histogramVals[5] = XML.getValue("edgeHistogram:f", -1.);
-		histogramVals[6] = XML.getValue("edgeHistogram:g", -1.);
-		histogramVals[7] = XML.getValue("edgeHistogram:h", -1.);
-		histogramVals[8] = XML.getValue("edgeHistogram:i", -1.);
-		histogramVals[9] = XML.getValue("edgeHistogram:j", -1.);
-		histogramVals[10] = XML.getValue("edgeHistogram:k", -1.);
-		histogramVals[11] = XML.getValue("edgeHistogram:m", -1.);
-		histogramVals[12] = XML.getValue("edgeHistogram:n", -1.);
-		histogramVals[13] = XML.getValue("edgeHistogram:o", -1.);
-		histogramVals[14] = XML.getValue("edgeHistogram:p", -1.);
-		histogramVals[15] = XML.getValue("edgeHistogram:k", -1.);
+		edgeHistogramVals.resize(16);
+		edgeHistogramVals[0] = XML.getValue("edgeHistogram:a", -1.);
+		edgeHistogramVals[1] = XML.getValue("edgeHistogram:b", -1.);
+		edgeHistogramVals[2] = XML.getValue("edgeHistogram:c", -1.);
+		edgeHistogramVals[3] = XML.getValue("edgeHistogram:d", -1.);
+		edgeHistogramVals[4] = XML.getValue("edgeHistogram:e", -1.);
+		edgeHistogramVals[5] = XML.getValue("edgeHistogram:f", -1.);
+		edgeHistogramVals[6] = XML.getValue("edgeHistogram:g", -1.);
+		edgeHistogramVals[7] = XML.getValue("edgeHistogram:h", -1.);
+		edgeHistogramVals[8] = XML.getValue("edgeHistogram:i", -1.);
+		edgeHistogramVals[9] = XML.getValue("edgeHistogram:j", -1.);
+		edgeHistogramVals[10] = XML.getValue("edgeHistogram:k", -1.);
+		edgeHistogramVals[11] = XML.getValue("edgeHistogram:m", -1.);
+		edgeHistogramVals[12] = XML.getValue("edgeHistogram:n", -1.);
+		edgeHistogramVals[13] = XML.getValue("edgeHistogram:o", -1.);
+		edgeHistogramVals[14] = XML.getValue("edgeHistogram:p", -1.);
+		edgeHistogramVals[15] = XML.getValue("edgeHistogram:q", -1.);
+
+		texHistogramVals.resize(16);
+		texHistogramVals[0] = XML.getValue("texHistogram:a", -1.);
+		texHistogramVals[1] = XML.getValue("texHistogram:b", -1.);
+		texHistogramVals[2] = XML.getValue("texHistogram:c", -1.);
+		texHistogramVals[3] = XML.getValue("texHistogram:d", -1.);
+		texHistogramVals[4] = XML.getValue("texHistogram:e", -1.);
+		texHistogramVals[5] = XML.getValue("texHistogram:f", -1.);
+		texHistogramVals[6] = XML.getValue("texHistogram:g", -1.);
+		texHistogramVals[7] = XML.getValue("texHistogram:h", -1.);
+		texHistogramVals[8] = XML.getValue("texHistogram:i", -1.);
+		texHistogramVals[9] = XML.getValue("texHistogram:j", -1.);
+		texHistogramVals[10] = XML.getValue("texHistogram:k", -1.);
+		texHistogramVals[11] = XML.getValue("texHistogram:m", -1.);
+		texHistogramVals[12] = XML.getValue("texHistogram:n", -1.);
+		texHistogramVals[13] = XML.getValue("texHistogram:o", -1.);
+		texHistogramVals[14] = XML.getValue("texHistogram:p", -1.);
+		texHistogramVals[15] = XML.getValue("texHistogram:q", -1.);
 	}
 	else
 	{
@@ -122,23 +155,23 @@ Item::Item(Video* video)
 		width = v.getWidth();
 		height = v.getHeight();
 
-		histogramVals.resize(16);
-		histogramVals[0] = 0;
-		histogramVals[1] = 0;
-		histogramVals[2] = 0;
-		histogramVals[3] = 0;
-		histogramVals[4] = 0;
-		histogramVals[5] = 0;
-		histogramVals[6] = 0;
-		histogramVals[7] = 0;
-		histogramVals[8] = 0;
-		histogramVals[9] = 0;
-		histogramVals[10] = 0;
-		histogramVals[11] = 0;
-		histogramVals[12] = 0;
-		histogramVals[13] = 0;
-		histogramVals[14] = 0;
-		histogramVals[15] = 0;
+		edgeHistogramVals.resize(16);
+		edgeHistogramVals[0] = 0;
+		edgeHistogramVals[1] = 0;
+		edgeHistogramVals[2] = 0;
+		edgeHistogramVals[3] = 0;
+		edgeHistogramVals[4] = 0;
+		edgeHistogramVals[5] = 0;
+		edgeHistogramVals[6] = 0;
+		edgeHistogramVals[7] = 0;
+		edgeHistogramVals[8] = 0;
+		edgeHistogramVals[9] = 0;
+		edgeHistogramVals[10] = 0;
+		edgeHistogramVals[11] = 0;
+		edgeHistogramVals[12] = 0;
+		edgeHistogramVals[13] = 0;
+		edgeHistogramVals[14] = 0;
+		edgeHistogramVals[15] = 0;
 		for (int i = 0; i < vidFrames; i++)
 		{
 			v.setPaused(false);
@@ -162,47 +195,75 @@ Item::Item(Video* video)
 					hue += currPixel.getHue();
 				}
 			}
+			
+			if (i == 0)
+			{
+				Image t;
+				t.getOFHandle() = ofImage(v.getPixels());
+				EdgeHistogram e(&t);
+				std::vector<float> frameEdges = e.getHistogramVals();
+				edgeHistogramVals[0] += frameEdges[0];
+				edgeHistogramVals[1] += frameEdges[1];
+				edgeHistogramVals[2] += frameEdges[2];
+				edgeHistogramVals[3] += frameEdges[3];
+				edgeHistogramVals[4] += frameEdges[4];
+				edgeHistogramVals[5] += frameEdges[5];
+				edgeHistogramVals[6] += frameEdges[6];
+				edgeHistogramVals[7] += frameEdges[7];
+				edgeHistogramVals[8] += frameEdges[8];
+				edgeHistogramVals[9] += frameEdges[9];
+				edgeHistogramVals[10] += frameEdges[10];
+				edgeHistogramVals[11] += frameEdges[11];
+				edgeHistogramVals[12] += frameEdges[12];
+				edgeHistogramVals[13] += frameEdges[13];
+				edgeHistogramVals[14] += frameEdges[14];
+				edgeHistogramVals[15] += frameEdges[15];
 
-			EdgeHistogram e(v.getPixels());
-			std::vector<float> frameEdges = e.getHistogramVals();
-			histogramVals[0] += frameEdges[0];
-			histogramVals[1] += frameEdges[1];
-			histogramVals[2] += frameEdges[2];
-			histogramVals[3] += frameEdges[3];
-			histogramVals[4] += frameEdges[4];
-			histogramVals[5] += frameEdges[5];
-			histogramVals[6] += frameEdges[6];
-			histogramVals[7] += frameEdges[7];
-			histogramVals[8] += frameEdges[8];
-			histogramVals[9] += frameEdges[9];
-			histogramVals[10] += frameEdges[10];
-			histogramVals[11] += frameEdges[11];
-			histogramVals[12] += frameEdges[12];
-			histogramVals[13] += frameEdges[13];
-			histogramVals[14] += frameEdges[14];
-			histogramVals[15] += frameEdges[15];
+				texHistogramVals = e.getTextureHistogramVals();
+			}
+			else
+			{
+				EdgeHistogram e(v.getPixels());
+				std::vector<float> frameEdges = e.getHistogramVals();
+				edgeHistogramVals[0] += frameEdges[0];
+				edgeHistogramVals[1] += frameEdges[1];
+				edgeHistogramVals[2] += frameEdges[2];
+				edgeHistogramVals[3] += frameEdges[3];
+				edgeHistogramVals[4] += frameEdges[4];
+				edgeHistogramVals[5] += frameEdges[5];
+				edgeHistogramVals[6] += frameEdges[6];
+				edgeHistogramVals[7] += frameEdges[7];
+				edgeHistogramVals[8] += frameEdges[8];
+				edgeHistogramVals[9] += frameEdges[9];
+				edgeHistogramVals[10] += frameEdges[10];
+				edgeHistogramVals[11] += frameEdges[11];
+				edgeHistogramVals[12] += frameEdges[12];
+				edgeHistogramVals[13] += frameEdges[13];
+				edgeHistogramVals[14] += frameEdges[14];
+				edgeHistogramVals[15] += frameEdges[15];
+			}
 		}
 		size_t vidSize = width * height * vidFrames;
 		lightness = lightness / vidSize;
 		brightness = brightness / vidSize;
 		hue = hue / vidSize;
-
-		histogramVals[0] = histogramVals[0] / 16;
-		histogramVals[1] = histogramVals[1] / 16;
-		histogramVals[2] = histogramVals[2] / 16;
-		histogramVals[3] = histogramVals[3] / 16;
-		histogramVals[4] = histogramVals[4] / 16;
-		histogramVals[5] = histogramVals[5] / 16;
-		histogramVals[6] = histogramVals[6] / 16;
-		histogramVals[7] = histogramVals[7] / 16;
-		histogramVals[8] = histogramVals[8] / 16;
-		histogramVals[9] = histogramVals[9] / 16;
-		histogramVals[10] = histogramVals[10] / 16;
-		histogramVals[11] = histogramVals[11] / 16;
-		histogramVals[12] = histogramVals[12] / 16;
-		histogramVals[13] = histogramVals[13] / 16;
-		histogramVals[14] = histogramVals[14] / 16;
-		histogramVals[15] = histogramVals[15] / 16;
+		
+		edgeHistogramVals[0] = edgeHistogramVals[0] / 16;
+		edgeHistogramVals[1] = edgeHistogramVals[1] / 16;
+		edgeHistogramVals[2] = edgeHistogramVals[2] / 16;
+		edgeHistogramVals[3] = edgeHistogramVals[3] / 16;
+		edgeHistogramVals[4] = edgeHistogramVals[4] / 16;
+		edgeHistogramVals[5] = edgeHistogramVals[5] / 16;
+		edgeHistogramVals[6] = edgeHistogramVals[6] / 16;
+		edgeHistogramVals[7] = edgeHistogramVals[7] / 16;
+		edgeHistogramVals[8] = edgeHistogramVals[8] / 16;
+		edgeHistogramVals[9] = edgeHistogramVals[9] / 16;
+		edgeHistogramVals[10] = edgeHistogramVals[10] / 16;
+		edgeHistogramVals[11] = edgeHistogramVals[11] / 16;
+		edgeHistogramVals[12] = edgeHistogramVals[12] / 16;
+		edgeHistogramVals[13] = edgeHistogramVals[13] / 16;
+		edgeHistogramVals[14] = edgeHistogramVals[14] / 16;
+		edgeHistogramVals[15] = edgeHistogramVals[15] / 16;
 
 		runtime = video->getRuntime();
 
@@ -253,10 +314,18 @@ std::string Item::getPropertyString() const
 {
 	char edge[512];
 	sprintf(edge, "Edge Histogram:\n\t%f\t%f\t%f\t%f\n\t%f\t%f\t%f\t%f\n\t%f\t%f\t%f\t%f\n\t%f\t%f\t%f\t%f\n",
-		histogramVals[0], histogramVals[1], histogramVals[2], histogramVals[3], 
-		histogramVals[4], histogramVals[5], histogramVals[6], histogramVals[7], 
-		histogramVals[8], histogramVals[9], histogramVals[10], histogramVals[11], 
-		histogramVals[12], histogramVals[13], histogramVals[14], histogramVals[15]);
+		edgeHistogramVals[0], edgeHistogramVals[1], edgeHistogramVals[2], edgeHistogramVals[3], 
+		edgeHistogramVals[4], edgeHistogramVals[5], edgeHistogramVals[6], edgeHistogramVals[7], 
+		edgeHistogramVals[8], edgeHistogramVals[9], edgeHistogramVals[10], edgeHistogramVals[11], 
+		edgeHistogramVals[12], edgeHistogramVals[13], edgeHistogramVals[14], edgeHistogramVals[15]);
+
+	char tex[512];
+	sprintf(tex, "Texture Histogram:\n\t%f\t%f\t%f\t%f\n\t%f\t%f\t%f\t%f\n\t%f\t%f\t%f\t%f\n\t%f\t%f\t%f\t%f\n",
+		texHistogramVals[0], texHistogramVals[1], texHistogramVals[2], texHistogramVals[3],
+		texHistogramVals[4], texHistogramVals[5], texHistogramVals[6], texHistogramVals[7],
+		texHistogramVals[8], texHistogramVals[9], texHistogramVals[10], texHistogramVals[11],
+		texHistogramVals[12], texHistogramVals[13], texHistogramVals[14], texHistogramVals[15]);
+
 	char additional[512];
 	if (runtime != -1.)
 	{
@@ -267,7 +336,7 @@ std::string Item::getPropertyString() const
 		sprintf(additional, "");
 	}
 	char res[1024];
-	sprintf(res, "Filename: %s\nSize: %dx%d\n\nLightness: %f\nBrightness: %f\nHue: %f\n\n%s\n\n%s", name.c_str(), width, height, lightness, brightness, hue, edge, additional);
+	sprintf(res, "Filename: %s\nSize: %dx%d\n\nLightness: %f\nBrightness: %f\nHue: %f\n\n%s\n%s\n\n%s", name.c_str(), width, height, lightness, brightness, hue, edge, tex, additional);
 	return res;
 }
 
@@ -282,12 +351,13 @@ void Item::saveXML()
 	XML.setValue("settings:hue", hue);
 
 	
-	if (histogramVals.size() != 0) {
+	if (edgeHistogramVals.size() != 0) {
 		char temp[20];
-		for (int i = 0; i < histogramVals.size(); i++) {
-			sprintf(temp, "edgeHistogram:%d", i);
-
-			XML.setValue(temp, histogramVals[i]);
+		for (int i = 0; i < edgeHistogramVals.size(); i++) {
+			sprintf(temp, "edgeHistogram:%c", conv[i]);
+			XML.setValue(temp, edgeHistogramVals[i]);
+			sprintf(temp, "texHistogram:%c", conv[i]);
+			XML.setValue(temp, texHistogramVals[i]);
 		}
 	}
 

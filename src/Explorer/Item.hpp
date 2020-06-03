@@ -29,6 +29,7 @@ private:
 	float runtime = -1.;
 
 	std::vector<std::string> tags;
-	std::vector<float> histogramVals;
+	std::vector<float> edgeHistogramVals;
+	std::vector<float> texHistogramVals;
 
 };
