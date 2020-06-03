@@ -27,6 +27,8 @@ public:
 
 	inline int getNumFaces() { return finder.blobs.size(); };
 
+	void getProps(float* brightness, float* hue);
+
 private:
 
 	int xOffset;

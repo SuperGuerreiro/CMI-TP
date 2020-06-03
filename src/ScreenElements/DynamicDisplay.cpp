@@ -10,35 +10,103 @@ DynamicDisplay::DynamicDisplay(int xOffset, int yOffset, int width, int height, 
 void DynamicDisplay::update()
 {
 	cam->update();
-	int v = cam->getNumFaces();
-	if (v != viewers)
+	count += 1 / ofGetFrameRate();
+	if (maxCount < count)
 	{
-		switch (v)
+		count = 0;
+	}
+	if (count == 0)
+	{
+		int v = cam->getNumFaces();
+		if (v != viewers)
+		{
+			switch (v)
+			{
+			case 0:
+				vPlaylist = explorer->getPlaylist("zero_viewers");
+				break;
+			case 1:
+				vPlaylist = explorer->getPlaylist("one_viewers");
+				break;
+			case 2:
+				vPlaylist = explorer->getPlaylist("two_viewers");
+				break;
+			case 3:
+				vPlaylist = explorer->getPlaylist("three_viewers");
+				break;
+			default:
+				break;
+			}
+			viewers = v;
+		}
+		cam->getProps(&brightness, &hue); // 256 total values
+		int bType = brightness / 86;
+		switch (bType)
 		{
 		case 0:
-			playlist = explorer->getPlaylist("zero_viewers");
+			bPlaylist = explorer->getPlaylist("brightness_a");
 			break;
 		case 1:
-			playlist = explorer->getPlaylist("one_viewers");
+			bPlaylist = explorer->getPlaylist("brightness_b");
 			break;
 		case 2:
-			playlist = explorer->getPlaylist("two_viewers");
-			break;
-		case 3:
-			playlist = explorer->getPlaylist("three_viewers");
+			bPlaylist = explorer->getPlaylist("brightness_c");
 			break;
 		default:
 			break;
 		}
-		viewers = v;
-	}
-	if (playlist.empty())
-	{
-		elements->select(0);
-	}
-	else
-	{
-		elements->select(playlist[0]);
+		int hType = hue / 86;
+		switch (hType)
+		{
+		case 0:
+			hPlaylist = explorer->getPlaylist("hue_a");
+			break;
+		case 1:
+			hPlaylist = explorer->getPlaylist("hue_b");
+			break;
+		case 2:
+			hPlaylist = explorer->getPlaylist("hue_c");
+			break;
+		default:
+			break;
+		}
+		if (vPlaylist.empty() && bPlaylist.empty() && hPlaylist.empty())
+		{
+			idx++;
+			elements->select(idx % elements->getSize());
+		}
+		else
+		{
+			std::vector<int>* t;
+			do
+			{
+				idx++;
+				int pid = idx % 3;
+				switch (pid)
+				{
+				case 0:
+					t = &vPlaylist;
+					break;
+				case 1:
+					t = &bPlaylist;
+					break;
+				case 2:
+					t = &hPlaylist;
+					break;
+				default:
+					break;
+				}
+			} while (t->empty());
+			elements->select((*t)[idx % t->size()]);
+		}
+		if ((*elements)[elements->getSelectedIndex()]->getType() == ElementType::Video)
+		{
+			maxCount = ((Video*)(*elements)[elements->getSelectedIndex()])->getRuntime();
+		}
+		else
+		{
+			maxCount = 5;
+		}
 	}
 	(*elements)[elements->getSelectedIndex()]->update();
 }

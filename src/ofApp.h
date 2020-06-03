@@ -67,6 +67,8 @@ private:
 		Button fillToggle;
 		bool fill = false;
 
+		bool play = true;
+
 		void handleTransition();
 		void updateFileProperties();
 		void resizeFileProperties();

@@ -37,6 +37,14 @@ private:
 	Camera* cam;
 	Explorer* explorer;
 
-	std::vector<int> playlist;
+	std::vector<int> vPlaylist;
+	std::vector<int> bPlaylist;
+	std::vector<int> hPlaylist;
 	int viewers = 0;
+	float brightness = 0;
+	float hue = 0;
+
+	float count = 0;
+	float maxCount = 5;
+	unsigned int idx = 0;
 };
