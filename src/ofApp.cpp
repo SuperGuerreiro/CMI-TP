@@ -35,7 +35,15 @@ void ofApp::setup(){
 	tb = new Button(0, 0, 0, 0, "Properties", ofColor::black, ofColor::lightGray, [this] { currentView = PresentMode::ItemProperties; });
 	td->addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	topbar.addElement(td, td->getName().length() * CHAR_WIDTH);
-	tb = new Button(0, 0, 0, 0, "Presentation Mode", ofColor::white, ofColor::cornflowerBlue, [this] { currentView = PresentMode::Showcase; explorer.generatePlaylists(); elements.select(0); });
+	tb = new Button(0, 0, 0, 0, "Presentation Mode", ofColor::white, ofColor::cornflowerBlue, [this] 
+	{
+		if (currentView != PresentMode::Showcase)
+		{
+			currentView = PresentMode::Showcase;
+			explorer.generatePlaylists();
+			elements.select(0);
+		}
+	});
 	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
 	tb = new Button(0, 0, 0, 0, "CamMode", ofColor::white, ofColor::cornflowerBlue, [this] { currentView = PresentMode::Camera; });
 	topbar.addElement(tb, tb->getName().length() * CHAR_WIDTH);
@@ -99,7 +107,7 @@ void ofApp::update() {
 		elements.update();
 		break;
 	case PresentMode::ViewItem:
-		if (i != -1)
+		if (play && i != -1)
 		{
 			elements[i]->update();
 		}
@@ -116,7 +124,10 @@ void ofApp::update() {
 		cam.update();
 		break;
 	case PresentMode::Showcase:
-		display.update();
+		if (play)
+		{
+			display.update();
+		}
 		fillToggle.update();
 		break;
 	default:
@@ -168,16 +179,43 @@ void ofApp::keyPressed(int key) {
 	switch (key) 
 	{
 	case OF_KEY_RETURN: //return = enter
-		if (currentView == PresentMode::ViewItem)
+		currentView = PresentMode::ViewItem;
+		break;
+	case OF_KEY_BACKSPACE:
+		currentView = PresentMode::Gallery;
+		break;
+	case 32: //space
+		if (elements.getSelectedIndex() != -1 && elements[elements.getSelectedIndex()]->getType() == ElementType::Video)
 		{
-			currentView = PresentMode::Gallery;
+			((Video*)elements[elements.getSelectedIndex()])->getOFHandle().setPaused(play);
 		}
-		else
+		play = !play;
+		break;
+	case 100: // d
+		currentView = PresentMode::Camera;
+		break;
+	case 111: // o
+		currentView = PresentMode::ItemProperties;
+		break;
+	case 112: // p
+		if (currentView != PresentMode::Showcase)
 		{
-			currentView = PresentMode::ViewItem;
+			currentView = PresentMode::Showcase;
+			explorer.generatePlaylists();
+			elements.select(0);
 		}
 		break;
+	case 102: // f
+		if (currentView == PresentMode::Showcase || currentView == PresentMode::ViewItem)
+		{
+			fill = !fill;
+			elements.setFillMode(fill);
+		}
+		break;
+	default:
+		break;
 	}
+	printf("%d\n", key);
 }
 
 //--------------------------------------------------------------
@@ -273,7 +311,7 @@ void ofApp::handleTransition()
 				}
 				elements.setFillMode(fill);
 			}
-			else if (lastView == PresentMode::ViewItem || currentView == PresentMode::Showcase)
+			else if (lastView == PresentMode::ViewItem || lastView == PresentMode::Showcase)
 			{
 				if (elements[elements.getSelectedIndex()]->getType() == ElementType::Video)
 				{
@@ -281,6 +319,7 @@ void ofApp::handleTransition()
 				}
 				elements.setFillMode(false);
 			}
+			play = true;
 			lastView = currentView;
 		}
 		if (lastElement != elements.getSelectedIndex())
@@ -297,6 +336,7 @@ void ofApp::handleTransition()
 					((Video*)elements[elements.getSelectedIndex()])->setFullScreen(true);
 				}
 			}
+			play = true;
 			lastElement = elements.getSelectedIndex();
 		}
 	}

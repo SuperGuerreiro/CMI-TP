@@ -70,7 +70,6 @@ void DynamicDisplay::update()
 		default:
 			break;
 		}
-		printf("bright: %f hue: %f - %d\n", brightness, hue, hType);
 		if (vPlaylist.empty() && bPlaylist.empty() && hPlaylist.empty())
 		{
 			idx++;
