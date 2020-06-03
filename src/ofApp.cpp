@@ -81,7 +81,7 @@ void ofApp::setup(){
 		}
 	}
 
-	propertiesScreen.add(new Text("THIS IS A TEXT\nA REALLY BIG TEXT\nNOW TELL ME WHAT YOU WANT\nWHAT YOU REALLY REALLY WANT", ofColor::black, 0 + 10, TOPBAR_HEIGHT + 10));
+	propertiesScreen.add(new Text("No file selected.", ofColor::black, 0 + 10, TOPBAR_HEIGHT + 10));
 	propertiesScreen.add(new Text("Add/Remove Tags:", ofColor::black, 0, 0));
 	propertiesScreen.add(new Button(0, 0, 12 + (7 * CHAR_WIDTH), 12 + CHAR_HEIGHT, "Add Tag", ofColor::white, ofColor::cornflowerBlue, [this]
 	{
