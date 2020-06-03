@@ -15,8 +15,12 @@ public:
 	EdgeHistogram(Image* image);
 	EdgeHistogram(Video* video);
 	std::vector<float> getHistogramVals();
+	std::vector<float> getTextureHistogramVals();
 
 private:
+
+	std::vector<cv::Mat>getGaborKernels();
+
 	int width, height;
 	int nRows, mCols;
 
@@ -29,4 +33,7 @@ private:
 	std::vector<cv::Mat> tmpFilterResult;
 
 	std::vector<float> edgeHistogramVals;
+	
+	std::vector<cv::Mat> gaborKernels;
+	std::vector<float> textureHistogramVals;
 };
